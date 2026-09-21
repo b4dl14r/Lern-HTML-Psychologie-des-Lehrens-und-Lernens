@@ -269,6 +269,104 @@ function istBeantwortet(f, ans){
   return true;
 }
 
+/* Intelligente Scaffolding-Engine: Liefert konkrete theoretische Heuristiken und Signalwörter */
+function getSmartHint(f) {
+  if (f.hint && f.hint.length > 25 && !f.hint.toLowerCase().includes("konzentriere dich") && !f.hint.toLowerCase().includes("guck")) {
+    return f.hint;
+  }
+
+  const text = ((f.thema || "") + " " + (f.modell || "") + " " + (f.frage || "") + " " + (f.stamm || "")).toLowerCase();
+
+  // ITFL-Modell & Narciss Feedback
+  if (text.includes("itfl") || text.includes("narciss") || text.includes("feedback")) {
+    if (text.includes("sprachgenie") || text.includes("müller")) {
+      return "Prüfe drei Kriterien nach dem ITFL-Modell: 1. Unmittelbarkeit: Kann Frau Müller bei sofortiger Signalrückmeldung nach jedem Buchstaben überhaupt internes Feedback (Selbstüberwachung) aufbauen? 2. Bezugspunkt: Ist 'Sprachgenie' ein veränderbares Verhaltensmerkmal oder eine feste Begabungszuschreibung? 3. Genauigkeit: Spiegelt '10 von 10' den echten Lernaufwand wider, wenn etliche Fehlversuche unberücksichtigt bleiben?";
+    }
+    if (text.includes("regelkreis") || text.includes("stellglied") || text.includes("regeleinrichtung")) {
+      return "Der ITFL ist ein doppelter Regelkreis: Curriculare Lehrziele setzt allein die Lehrkraft (lehrende Seite). Das Stellglied (Korrekturhandlung, Anstrengungssteigerung) bedient allein der Lernende. Aber: Repräsentationen von Standards (Soll-Werte) und Regeleinrichtungen (Soll-Ist-Vergleiche) existieren auf BEIDEN Seiten!";
+    }
+    if (text.includes("kr") || text.includes("kcr") || text.includes("km") || text.includes("kc") || text.includes("kh") || text.includes("kp") || text.includes("ktc") || text.includes("kmc")) {
+      return "Klassifikation nach Narciss: KR = reines Richtig/Falsch; KCR = Nennung der korrekten Lösung; KP = quantitative Leistungsrückmeldung (z.B. '5 von 8 Schritten richtig'); KM = Benennung der konkreten Fehlerart; KC = Erklärung des fachlichen Konzepts/Regel; KH = strategischer Hinweis zum weiteren Vorgehen ('How to proceed'); KTC = Verdeutlichung von Aufgabenanforderungen; KMC = Anregung metakognitiver Strategien.";
+    }
+    return "Feedback-Kriterien nach Narciss: Wirksames Feedback setzt an veränderbaren Prozessen und Strategien an (Aufgabenbezug), niemals an globalen Personenmerkmalen. Unmittelbares Feedback verleitet oft zu blindem Raten (Trial & Error); elaboriertes Feedback liefert Hinweise zur Fehlerkorrektur.";
+  }
+
+  // Operantes Konditionieren & Verstärkungspläne
+  if (text.includes("konditionieren") || text.includes("verstärk") || text.includes("skinner") || text.includes("bruno") || text.includes("ferdinand") || text.includes("helena")) {
+    if (text.includes("bruno") || text.includes("reinrufen")) {
+      return "Schritt 1: Steigt Brunos Verhaltensrate? Ja -> Es MUSS eine Verstärkung sein (keine Bestrafung). Schritt 2: Positiv oder negativ? Er erhält sofort Hilfe (positiver Reiz dargeboten) UND umgeht die Wartezeit (aversiver Zustand entfällt = negative Verstärkung). Schritt 3: 'Jedes 3. Mal' ist eine starre Reaktionsanzahl = fester Quotenplan (FR3), der maximale Löschungsresistenz erzeugt!";
+    }
+    if (text.includes("ferdinand") || text.includes("smartphone")) {
+      return "Achte auf die Verhaltensrate: Sie steigt kontinuierlich an! Der Türverweis wirkt daher funktional als Verstärker (Unterrichtsentlastung + Johlen der Klasse als soziale Belohnung). 'Jede dritte Stunde' bindet die Konsequenz an eine Zeiteinheit = Intervallplan. Intermittierende Verstärkung löscht Verhalten nicht, sondern zementiert es!";
+    }
+    if (text.includes("helena") || text.includes("werkstatt")) {
+      return "Löschung (Extinktion) tritt ein, wenn ein vormals wirksamer Verstärker (die Zuwendung der Lehrerin) konsequent ausbleibt. Das Hinwenden zum 'Chef' wird wiederum negativ verstärkt, sobald die lästige Wartezeit durch den neuen Zeitplan entfällt.";
+    }
+    return "Operante Grundlogik: Verhaltensrate steigt = Verstärkung; Rate sinkt = Bestrafung oder Löschung. Positiv = Reiz hinzugefügt; Negativ = aversiver Reiz entfernt. Feste Quote = nach n Reaktionen; Variables Intervall = nach unvorhersehbaren Zeitabständen.";
+  }
+
+  // Klassisches Konditionieren
+  if (text.includes("klassisch") || text.includes("pawlow") || text.includes("bahir")) {
+    return "Signallernen: Ein UCS (lautes Tadeln/Schreien) löst reflexhaft eine UCR (Schreck/Weinen) aus. Der vormals neutrale Reiz (Lehrer Magos oder das Fach Mathematik) wird durch zeitliche Paarung zum CS. Wenn das Kind beim bloßen Gedanken weint oder die ganze Schule verweigert, liegt eine CR bzw. Reizgeneralisierung vor.";
+  }
+
+  // Kausalattribution & Heckhausen Selbstbewertungsmodell
+  if (text.includes("attribution") || text.includes("weiner") || text.includes("selbstbewertung") || text.includes("hans") || text.includes("tabea") || text.includes("niklas")) {
+    if (text.includes("hans") || text.includes("tabea") || text.includes("niklas")) {
+      return "Misserfolgsmeidendes Muster: Erfolg wird externalisiert (leichte Aufgabe = external-stabil; Glück = external-variabel). Misserfolg wird internal-stabil attribuiert ('Ich bin dumm für Mathe'). Folge: Chronisch negative Affektbilanz (viel Scham, kein Stolz) und Wahl von Extremaufgaben (sehr leicht oder unlösbar schwer), um diagnostische Rückmeldungen zu vermeiden.";
+    }
+    return "Weiners Dimensionen: Lokation (Person vs. Umwelt), Stabilität (stabil vs. variabel), Kontrollierbarkeit. Erfolgszuversichtliche attribuieren Misserfolge auf variable, kontrollierbare Faktoren: mangelnde Anstrengung oder temporäres Pech.";
+  }
+
+  // Erweitertes Kognitives Motivationsmodell (EKM)
+  if (text.includes("ekm") || text.includes("erweitert") || text.includes("erwartung") || text.includes("anton")) {
+    if (text.includes("anton") || text.includes("metall")) {
+      return "Differenziere die Erwartungsachsen: Handlungs-Ergebnis-Erwartung (H-E) fragt: 'Führt meine Handlung zum Ergebnis?' (Anton traut sich die Bewerbung zu). Ergebnis-Folge-Erwartung (E-F) fragt: 'Bringt mir das Ergebnis die erwünschten Konsequenzen?' (Praktikum sichert Ausbildungsplatz).";
+    }
+    return "Die drei Achsen im EKM: 1. Situations-Ergebnis (S-E): 'Stellt sich das Ergebnis von alleine ein?' (Hohe S-E hemmt eigenes Handeln!). 2. Handlungs-Ergebnis (H-E): 'Führt mein Einsatz zum Erfolg?' 3. Ergebnis-Folge (E-F): 'Hat die Note/das Ziel wertvolle Konsequenzen für mich?'";
+  }
+
+  // Testgütekriterien & Diagnostik
+  if (text.includes("gütekriteri") || text.includes("objektivität") || text.includes("reliabilität") || text.includes("validität") || text.includes("notenschlüssel")) {
+    if (text.includes("physik-lehrer") || text.includes("mathematik-lehrer") || text.includes("schulordnung")) {
+      return "Objektivität nach Prozessphasen: Durchführung = einheitliche Prüfungsbedingungen; Auswertung = kriteriengeleitete Punktevergabe; Interpretation = verbindlicher Notenschlüssel VORAB. Wenn der Notenschlüssel erst nachträglich an den Klassenschnitt angepasst wird (Glockenkurve), verletzt dies die Interpretationsobjektivität!";
+    }
+    return "Hierarchie: Durchführungsobjektivität -> Auswertungsobjektivität -> Interpretationsobjektivität. Objektivität sichert Reliabilität (Freiheit von Messfehlern). Beides ist Voraussetzung für Validität (Gültigkeit bezüglich des intendierten Lehrziels).";
+  }
+
+  // Gedächtnismodelle & Cognitive Load
+  if (text.includes("gedächtnis") || text.includes("atkinson") || text.includes("baddeley") || text.includes("sweller") || text.includes("load") || text.includes("craik")) {
+    if (text.includes("baddeley")) {
+      return "Zentrale Exekutive steuert Aufmerksamkeit und koordiniert modalitätsunabhängig. Die Sklavensysteme (Phonologische Schleife = inneres Sprechen/Sprachspeicher; Visuell-räumlicher Notizblock = Vorstellungsbilder/mentale Rotation) sind modalitätsspezifisch und kapazitätsbegrenzt.";
+    }
+    if (text.includes("sweller") || text.includes("load")) {
+      return "Swellers Trias: Intrinsic Load = inhärente Stoffschwierigkeit. Extraneous Load = Belastung durch schlechte Instruktion oder geteilte Aufmerksamkeit (Split-Attention). Germane Load = lernbezogene Anstrengung zur aktiven Schemakonstruktion.";
+    }
+    if (text.includes("craik") || text.includes("processing") || text.includes("verarbeitungstiefe")) {
+      return "Levels-of-Processing: Die Behaltensdauer hängt von der Elaborationstiefe ab: graphisch (flach) -> phonemisch (mittel) -> semantisch/bedeutungsbezogen (tief). Reines Wiederholen oder passiver Medienkonsum bleiben flach.";
+    }
+    return "Mehrspeichermodell: Sensorisches Register = riesig, aber Millisekunden; Kurzzeit-/Arbeitsgedächtnis = 7±2 Chunks, 20-30s Haltedauer, verliert durch Interferenz; Langzeitgedächtnis = unbegrenzt, semantisch organisiert.";
+  }
+
+  // Bezugsnormorientierung (Rheinberg)
+  if (text.includes("bezugsnorm") || text.includes("bno")) {
+    return "Vergleichsmaßstäbe: Soziale BNO vergleicht Schüler im Querschnitt (Rangreihe, Notenschnitt) und stabilisiert Begabungsattributionen. Individuelle BNO vergleicht den Lernenden im Längsschnitt (eigener Zuwachs T1 vs. T2) und fördert Anstrengungsattribution sowie Passung.";
+  }
+
+  // Entwicklungspsychologie
+  if (text.includes("entwicklung") || text.includes("piaget") || text.includes("bronfenbrenner") || text.includes("wygotski")) {
+    if (text.includes("piaget")) {
+      return "Stufenfolge nach Piaget: 1. Sensomotorisch (0-2 J., Saugschema, Objektpermanenz). 2. Präoperational (2-7 J., Symbolspiel, Egozentrismus). 3. Konkret-operational (7-11 J., Invarianz/Mengenerhaltung, Klassenbildung). 4. Formal-operational (ab 12 J., abstraktes hypothetisch-deduktives Denken).";
+    }
+    if (text.includes("bronfenbrenner")) {
+      return "Ökologische Systemebenen: Mikrosystem = direkter Lebensbereich (Klassenzimmer, Familie). Mesosystem = Verknüpfung zweier Mikrosysteme (Elterngespräch). Exosystem = Lebensbereich Dritter mit indirekter Wirkung (Arbeitsplatz der Eltern). Makrosystem = Gesetze, Kultur, Bildungspolitik. Chronosystem = historische Zeitdimension.";
+    }
+    return "Kulturvergleich: Neurobiologische Grundemotionen und Primärmimik sind universell. Kulturell variieren Darbietungsregeln (Display Rules), Bindungsmusterverteilungen und das Ausmaß an Autonomiekonflikten im Jugendalter.";
+  }
+
+  return "Analysiere die theoretischen Kernannahmen: Welche Bedingungen sind veränderbar (variabel) und welche personengebunden (stabil)? Achte auf Signalwörter bezüglich Verhaltensraten, Kausalzuschreibungen und Messzeitpunkten.";
+}
+
 let view = "start";
 let S = null;
 
@@ -316,7 +414,7 @@ function renderStart(){
 
   <button class="mode" onclick="go('training-menu')">
     <b>Training</b>
-    <span>Gezieltes Üben nach Themengebiet oder alle 300+ Aufgaben im Durchlauf. Mit kurzen Denkanstößen und vollständigen, detaillierten Musterlösungen.</span>
+    <span>Gezieltes Üben nach Themengebiet oder alle 300+ Aufgaben im Durchlauf. Mit theoretischen Denkimpulsen und vollständigen, detaillierten Musterlösungen.</span>
   </button>
 
   <button class="mode" onclick="startFehler()" ${offeneFehler?"":"disabled"}>
@@ -489,10 +587,10 @@ function renderFrage(){
     </div>`;
   }
 
-  // Kurzer Denkanstoß (ohne Lösung zu spoilern)
-  const kurzerTipp = f.hint || (f.modell ? `Konzentriere dich auf die Kernaussage von: ${f.modell}.` : "Analysiere die Bedingungen im Fallbeispiel genau.");
+  // Intelligenter Denkimpuls
+  const tipp = getSmartHint(f);
   html += `
-  <div class="inline-hint" id="hintBox">💡 <strong>Denkimpuls:</strong> ${esc(kurzerTipp)}</div>
+  <div class="inline-hint" id="hintBox">💡 <strong>Denkimpuls:</strong><br>${esc(tipp)}</div>
   `;
 
   if(zeigen) html += revealHtml(f, ans);
@@ -590,7 +688,7 @@ function renderFoot(){
   let btns = "";
   if(S.i > 0) btns += `<button class="btn ghost narrow" id="fPrev" title="Zurück">←</button>`;
 
-  // Kurzer Denkimpuls Toggle
+  // Denkimpuls Toggle
   btns += `<button class="btn hint" onclick="$('#hintBox').classList.toggle('open')">💡 Hinweis</button>`;
 
   if(S.modus==="klausur" && !S.abgegeben){
