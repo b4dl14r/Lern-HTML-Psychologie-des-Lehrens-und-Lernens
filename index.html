@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Staatsexamen Pädagogische Psychologie</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --secondary: #0f766e;
+      --accent: #d97706;
+      --accent-light: #fef3c7;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --border-light: #e2e8f0;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.45;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overscroll-behavior-y: none;
+    }
+
+    body {
+      padding-bottom: calc(75px + env(safe-area-inset-bottom));
+    }
+
+    /* Kompakter, nativer iOS-Header */
+    header {
+      background: #1e3a8a;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding-top: env(safe-area-inset-top);
+    }
+    .header-inner {
+      padding: 0.5rem 0.75rem 0.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .action-bar {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    /* Native Segmented Control */
+    .segmented-control {
+      display: flex;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 2px;
+      flex: 1;
+      max-width: 230px;
+    }
+    .seg-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      min-height: 30px;
+    }
+    .seg-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.82rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      min-height: 32px;
+      padding: 0 0.6rem;
+      font-weight: 600;
+    }
+    .btn-submit {
+      background: var(--success);
+      color: #fff;
+      border: none;
+      min-height: 30px;
+      padding: 0 0.75rem;
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: none;
+    }
+    .btn-ghost:active { background: rgba(255,255,255,0.25); }
+
+    .progress-bar-wrap {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #38bdf8;
+      transition: width 0.2s ease;
+    }
+
+    /* Hauptbereich */
+    main {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0.5rem 0.5rem;
+    }
+
+    /* Filter Chips */
+    .filter-scroll {
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding: 0.2rem 0 0.5rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .filter-scroll::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.3rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .filter-chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Frage-Karten */
+    .card {
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      padding: 0.85rem;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .q-num {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .q-topic {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .case-box {
+      background: #f8fafc;
+      border-left: 3.5px solid var(--primary);
+      padding: 0.65rem 0.75rem;
+      font-size: 0.88rem;
+      font-style: italic;
+      line-height: 1.45;
+      margin-bottom: 0.65rem;
+      border-radius: 0 6px 6px 0;
+    }
+    .q-prompt {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .sub-list {
+      list-style: none;
+      margin-bottom: 0.5rem;
+    }
+    .sub-list li {
+      font-size: 0.86rem;
+      padding: 0.2rem 0;
+      color: #334155;
+    }
+
+    /* Optionen / Buttons */
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .opt-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .opt-label.checked {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+    .opt-label.correct {
+      background: var(--success-bg) !important;
+      border-color: var(--success) !important;
+      color: #14532d;
+      font-weight: 600;
+    }
+    .opt-label.incorrect {
+      background: var(--danger-bg) !important;
+      border-color: var(--danger) !important;
+      color: #7f1d1d;
+    }
+    .opt-label input {
+      margin-top: 0.15rem;
+      transform: scale(1.15);
+    }
+
+    /* Scrollbare Matrizen auf Mobile */
+    .matrix-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0.5rem 0;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+    }
+    .matrix-table {
+      width: 100%;
+      min-width: 480px;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .matrix-table th, .matrix-table td {
+      border: 1px solid var(--border-light);
+      padding: 0.5rem;
+      text-align: left;
+    }
+    .matrix-table th { background: #f8fafc; font-weight: 600; }
+    .matrix-table td.center, .matrix-table th.center { text-align: center; width: 65px; }
+    .matrix-table tr.row-correct { background: #f0fdf4; }
+    .matrix-table tr.row-incorrect { background: #fef2f2; }
+    .matrix-table input[type="radio"] { transform: scale(1.2); }
+
+    .card-actions {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .btn-check {
+      background: #0f766e;
+      color: #fff;
+      border: none;
+      font-size: 0.78rem;
+    }
+    .btn-hint {
+      background: var(--accent-light);
+      color: #92400e;
+      border: 1px solid #fcd34d;
+      font-size: 0.78rem;
+    }
+    .hint-box {
+      display: none;
+      background: #fffbeb;
+      border: 1px dashed #f59e0b;
+      padding: 0.65rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: #78350f;
+      margin-top: 0.5rem;
+      line-height: 1.45;
+    }
+    .hint-box.open { display: block; }
+    
+    .feedback-box {
+      display: none;
+      margin-top: 0.65rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+    .feedback-box.correct { background: var(--success-bg); border: 1px solid var(--success); color: #14532d; display: block; }
+    .feedback-box.incorrect { background: var(--danger-bg); border: 1px solid var(--danger); color: #7f1d1d; display: block; }
+
+    /* Results Dashboard */
+    .results-panel {
+      display: none;
+      background: #fff;
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .results-panel.visible { display: block; }
+    .score-summary {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: #f8fafc;
+      padding: 0.85rem;
+      border-radius: 8px;
+      margin: 0.75rem 0;
+    }
+    .grade-badge {
+      font-size: 1.8rem;
+      font-weight: 800;
+      padding: 0.2rem 0.8rem;
+      border-radius: 8px;
+    }
+    .grade-pass { background: #dcfce7; color: #15803d; }
+    .grade-fail { background: #fee2e2; color: #b91c1c; }
+
+    /* Fixer Footer */
+    footer.sticky-foot {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 0.45rem 0.85rem calc(0.45rem + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 40;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="top-bar">
+        <h1>Pädagogische Psychologie</h1>
+        <div style="display:flex; gap:0.4rem; align-items:center;">
+          <span id="answered-badge" style="font-size:0.75rem; font-weight:600; opacity:0.9;">0/20</span>
+          <button class="btn-submit" id="btn-submit-head" onclick="gradeExam()">Abgeben</button>
+        </div>
+      </div>
+      <div class="action-bar">
+        <div class="segmented-control">
+          <button type="button" class="seg-btn active" id="seg-exam" onclick="setMode('exam')">Prüfung</button>
+          <button type="button" class="seg-btn" id="seg-train" onclick="setMode('training')">Training</button>
+        </div>
+        <div style="display:flex; gap:0.3rem;">
+          <button class="btn-ghost" id="btn-new" onclick="startNewExam()">Neu</button>
+          <button class="btn-ghost" onclick="resetAll()">Reset</button>
+        </div>
+      </div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="p-bar"></div></div>
+  </header>
+
+  <main>
+    <div id="results-panel" class="results-panel">
+      <h2 style="font-size:1.15rem; color:var(--primary);">Klausurergebnis</h2>
+      <div class="score-summary">
+        <div>
+          <div style="font-size:1.4rem; font-weight:800; color:var(--primary);" id="score-pts">0/0</div>
+          <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">PUNKTE</div>
+        </div>
+        <div>
+          <div style="font-size:1.4rem; font-weight:800;" id="score-pct">0%</div>
+          <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">QUOTE</div>
+        </div>
+        <div>
+          <div id="grade-display" class="grade-badge grade-pass">1.0</div>
+          <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; font-weight:600;">NOTE</div>
+        </div>
+      </div>
+      <div id="category-report" style="font-size:0.8rem;"></div>
+      <button class="btn-ghost" style="background:#1e3a8a; width:100%; margin-top:0.75rem; min-height:36px;" onclick="window.scrollTo({top: 350, behavior:'smooth'})">Zu den Musterlösungen ↓</button>
+    </div>
+
+    <div class="filter-scroll" id="filter-container" style="display:none;">
+      <div class="filter-chip active" onclick="setFilter('all', this)">Alle (76)</div>
+      <div class="filter-chip" onclick="setFilter('Lernpsychologie', this)">Lernen</div>
+      <div class="filter-chip" onclick="setFilter('Kognition', this)">Gedächtnis</div>
+      <div class="filter-chip" onclick="setFilter('Motivation', this)">Motivation</div>
+      <div class="filter-chip" onclick="setFilter('Unterricht', this)">Unterricht</div>
+      <div class="filter-chip" onclick="setFilter('Interaktion', this)">Feedback</div>
+      <div class="filter-chip" onclick="setFilter('Diagnostik & Entwicklung', this)">Diagnostik</div>
+    </div>
+
+    <div id="q-container"></div>
+  </main>
+
+  <footer class="sticky-foot">
+    <span id="foot-status" style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">0 Aufgaben gelöst</span>
+    <button class="btn-submit" id="btn-submit-foot" onclick="gradeExam()">Abgeben</button>
+  </footer>
+
+  <script>
+    /* iOS Gestures Lock */
+    document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+    document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
+
+    /* MASTER DATABASE (76 QUESTIONS) */
+    const questionBank = [
+      /* --- 1. LERNPSYCHOLOGIE (14 Aufgaben) --- */
+      {
+        id: "lp1", cat: "Lernpsychologie", topic: "Lernbegriff & Abgrenzung", pts: 4,
+        prompt: "Welche Aussagen gehören zu einer psychologischen Beschreibung des Begriffs Lernen? Lernen ist eine...",
+        sub: ["(1) sensible Veränderung von Verhalten und Verhaltenspotential.", "(2) nicht nachholbare Veränderung von Verhalten und Verhaltenspotential.", "(3) relativ überdauernde Veränderung von Verhalten und Verhaltenspotential.", "(4) reversible Veränderung von Verhalten und Verhaltenspotential.", "(5) universelle Veränderung von Verhalten und Verhaltenspotential."],
+        type: "single",
+        options: [{ k: "a", t: "Aussage (2) trifft zu; alle anderen Aussagen treffen nicht zu." }, { k: "b", t: "Die Aussagen (3), (4) und (5) treffen zu; alle anderen treffen nicht zu." }, { k: "c", t: "Die Aussagen (1) und (2) treffen zu; alle anderen treffen nicht zu." }, { k: "d", t: "Die Aussagen (3) und (4) treffen zu; alle anderen treffen nicht zu." }, { k: "e", t: "Aussage (3) trifft zu; alle anderen treffen nicht zu." }],
+        correct: "d",
+        hint: "Lernen beruht auf Erfahrung/Übung, ist relativ überdauernd, aber reversibel (Vergessen). Universell & irreversibel ist Reifung; irreversibel & an sensible Phasen gebunden ist Prägung.",
+        exp: "Richtig ist die Kombination (3) und (4). Lernen ist relativ überdauernd und reversibel. Reifung ist universell; Prägung an irreversible sensible Phasen gebunden."
+      },
+      {
+        id: "lp2", cat: "Lernpsychologie", topic: "Klassisches Konditionieren (Bahir)", pts: 6,
+        caseStudy: "Bahir (2. Klasse) wollte zunächst nicht in die Schule, wenn Mathe anstand. Später weinte er schon bei Erwähnung von Herrn Magos. Nun verweigert er die Schule ganz. Der Lehrer berichtet: 'Bahir vergisst Hausaufgaben. Ich habe ihn oft vor der Klasse getadelt und bin neulich laut geworden, sodass er weinte.'",
+        prompt: "Ordnen Sie die Komponenten des Klassischen Konditionierens zu:",
+        type: "matrix", cols: ["UCS", "CS", "UCR", "CR"],
+        rows: [
+          { id: "r1", l: "Das laute Tadeln / Anschreien vor der Klasse", c: "UCS" },
+          { id: "r2", l: "Bahirs Angst vor dem Mathematikunterricht", c: "CR" },
+          { id: "r3", l: "Der Klassenlehrer Herr Magos (ursprünglich neutral)", c: "CS" },
+          { id: "r4", l: "Das Weinen Bahirs unmittelbar beim lauten Tadel", c: "UCR" },
+          { id: "r5", l: "Bahirs Sträuben, generell in die Schule zu gehen (Generalisierung)", c: "CR" },
+          { id: "r6", l: "Bahirs Weinen beim bloßen Gedanken an Herrn Magos", c: "CR" }
+        ],
+        hint: "UCS löst reflexhaft UCR aus. Durch zeitliche Kopplung wird der neutrale Reiz zum CS, der die CR triggert. Ausweitung auf Schule = Reizgeneralisierung.",
+        exp: "Lauter Tadel = UCS; Weinen direkt darauf = UCR. Lehrer & Fach = CS; Angst und Weinen bei Erwähnung = CR. Schulverweigerung = Reizgeneralisierung (CR)."
+      },
+      {
+        id: "lp3", cat: "Lernpsychologie", topic: "Operantes Konditionieren (Bruno)", pts: 4,
+        caseStudy: "Frau Schneider gibt Stillarbeit auf. Bruno ruft ohne Meldung laut Fragen rein. Die Lehrerin schimpft ('Erst melden!'), beantwortet aber sofort seine Frage, während wartende Kinder warten müssen. Bruno hasst Warten. Sein Reinrufen nimmt stetig zu.",
+        prompt: "Mit welchen operanten Prinzipien wird Brunos Reinrufen funktional verstärkt?",
+        sub: ["(1) Brunos Reinrufen wird positiv verstärkt.", "(2) Brunos Reinrufen wird negativ verstärkt.", "(3) Brunos Reinrufen wird nach Typ I bestraft.", "(4) Brunos Reinrufen wird nach Typ II bestraft.", "(5) Brunos Reinrufen wird gelöscht."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (3) und (4) treffen zu, alle anderen nicht." }, { k: "b", t: "Die Aussagen (1) und (2) treffen zu, alle anderen nicht." }, { k: "c", t: "Die Aussagen (2) und (3) treffen zu, alle anderen nicht." }, { k: "d", t: "Nur Aussage (1) trifft zu, alle anderen nicht." }],
+        correct: "b",
+        hint: "Verstärkung liegt vor, wenn Verhaltensrate STEIGT. Positiv: Erhalt von Hilfe. Negativ: Vermeidung des aversiven Wartens.",
+        exp: "Richtig ist (1) und (2): Verhaltensrate steigt. Positiv: Erhalt prompter Hilfe. Negativ: Vermeidung von Wartezeit. Der Tadel hemmt das Verhalten nicht."
+      },
+      {
+        id: "lp4", cat: "Lernpsychologie", topic: "Intermittierende Verstärkungspläne (Bruno)", pts: 4,
+        caseStudy: "Ein Kollege rät Frau Schneider, Brunos Reinrufen nur noch bei jedem dritten Mal zu beantworten und ihn sonst zu ignorieren.",
+        prompt: "Ist diese Empfehlung aus Sicht der operanten Konditionierung sinnvoll?",
+        sub: ["(1) Ja, denn das Reinrufen wird dadurch nach einem variablen Intervallplan negativ verstärkt.", "(2) Nein, denn das Reinrufen wird dadurch nach einem fixierten Quotenplan negativ verstärkt.", "(3) Nein, denn das Reinrufen wird dadurch nach einem fixierten Intervallplan positiv verstärkt.", "(4) Ja, denn das Reinrufen wird dadurch nach einem variablen Quotenplan negativ verstärkt.", "(5) Nein, denn das Reinrufen wird dadurch nach einem fixierten Quotenplan positiv verstärkt."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (2) und (5) treffen zu, alle anderen aber nicht." }, { k: "b", t: "Aussage (5) trifft zu, alle anderen treffen nicht zu." }, { k: "c", t: "Die Aussagen (1) und (3) treffen zu, alle anderen nicht." }, { k: "d", t: "Die Aussagen (4) und (5) treffen zu, alle anderen nicht." }],
+        correct: "b",
+        hint: "Jedes 3. Mal belohnen = fester Quotenplan (FR3). Intermittierende Verstärkung führt zu maximaler Löschungsresistenz!",
+        exp: "Richtig ist (5): Nur jedes 3. Mal einzugehen ist ein fixierter Quotenplan (FR3) mit positiver Verstärkung. Das erzeugt maximale Löschungsresistenz."
+      },
+      {
+        id: "lp5", cat: "Lernpsychologie", topic: "Verstärkungspläne im Alltag", pts: 5,
+        prompt: "Welcher Verstärkungsplan liegt in den folgenden Beispielen vor?",
+        type: "matrix", cols: ["Kontinuierlich (CRF)", "Feste Quote (FR)", "Variable Quote (VR)", "Festes Intervall (FI)", "Variables Intervall (VI)"],
+        rows: [
+          { id: "vp1", l: "Ein Spielautomat schüttet nach unbestimmter Anzahl von Einsätzen Gewinn aus.", c: "Variable Quote (VR)" },
+          { id: "vp2", l: "Nach exakt 10 gelösten Aufgaben schaltet die Lern-App ein Bonusspiel frei.", c: "Feste Quote (FR)" },
+          { id: "vp3", l: "Nach jeder einzelnen korrekten Eingabe lobt die Software sofort.", c: "Kontinuierlich (CRF)" },
+          { id: "vp4", l: "Ein Surfer wartet im Meer; in unvorhersehbaren Abständen rollt eine Welle an.", c: "Variables Intervall (VI)" },
+          { id: "vp5", l: "Lernen donnerstags für den wöchentlich stets freitags geschriebenen Test.", c: "Festes Intervall (FI)" }
+        ],
+        hint: "Quote = Anzahl. Intervall = Zeitablauf. Fest = konstant. Variabel = stochastisch.",
+        exp: "Spielautomat = VR; 10 Aufgaben = FR10; Jede Eingabe = Kontinuierlich; Welle surfen = VI; Fester Wochentag = FI (Scalloping)."
+      },
+      {
+        id: "lp6", cat: "Lernpsychologie", topic: "Ferdinands Smartphone", pts: 4,
+        caseStudy: "Ferdinand spielt im Unterricht oft mit dem Handy. Der Lehrer schickt ihn jedes Mal schimpfend für 5 Minuten vor die Tür. Die Mitschüler johlen und lachen. Ferdinand spielt immer öfter mit dem Handy. Danach reagiert der Lehrer nur noch jede dritte Stunde.",
+        prompt: "Welche Aussagen erklären Ferdinands Verhaltensrate?",
+        sub: ["(1) Das Spielen mit dem Smartphone wurde vor dem Austausch mit den Kollegen kontinuierlich verstärkt.", "(2) Das Johlen der Mitschüler und das Verlassen des Unterrichts wirken als starke positive bzw. negative Verstärker.", "(3) Nach dem Austausch mit den Kollegen wurde das Verhalten intermittierend nach einem variablen Quotenplan verstärkt.", "(4) Die Intervention nach dem Kollegenrat führte zu einer erfolgreichen Löschung des Verhaltens."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1) und (2) treffen zu; alle anderen Aussagen treffen nicht zu." }, { k: "b", t: "Aussagen (2), (3) und (4) treffen zu." }, { k: "c", t: "Nur Aussage (1) trifft zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "Türverweis = Entlastung (negative Verstärkung); Johlen = Aufmerksamkeit (positive Verstärkung). Jedes Mal = kontinuierlich.",
+        exp: "Richtig ist (1) und (2): Ferdinands Verhalten wurde kontinuierlich verstärkt. Jede dritte Stunde zu reagieren ist kein variabler Quotenplan, sondern machte es löschungsresistent."
+      },
+      {
+        id: "lp7", cat: "Lernpsychologie", topic: "Werkstattunterricht Helena", pts: 4,
+        caseStudy: "Helena will Feedback nur von der Lehrerin. Die schickt sie konsequent zum Schüler-'Chef'. Helena geht hin, muss aber lange anstehen und tippt ungeduldig mit dem Fuß. Die Lehrerin optimiert den Zeitplan, sodass Helena nicht mehr warten muss. Danach geht sie nicht mehr zur Lehrerin.",
+        prompt: "Was passiert aus Sicht der operanten Konditionierung bei Helena?",
+        sub: ["(1) Das Ansprechen der Lehrerin wurde durch deren Zurückweisung konsequent gelöscht.", "(2) Das Aufsuchen des 'Chefs' wurde durch die Beseitigung der langen Wartezeit negativ verstärkt.", "(3) Das Einhalten der Werkstattregeln wurde durch den raschen Erhalt der Rückmeldung positiv verstärkt.", "(4) Helena wurde durch das Schicken zum Chef nach Typ I bestraft."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) trifft nicht zu." }, { k: "b", t: "Nur die Aussagen (1) und (3) treffen zu." }, { k: "c", t: "Nur Aussage (2) trifft zu." }, { k: "d", t: "Alle Aussagen (1) bis (4) treffen zu." }],
+        correct: "a",
+        hint: "Löschung = Ausbleiben der Lehrerhilfe. Negative Verstärkung = Entfall der Wartezeit. Positive Verstärkung = Chef-Feedback.",
+        exp: "Richtig ist (1), (2) und (3). Das Störverhalten wurde gelöscht; der Gang zum Chef wurde negativ und positiv verstärkt."
+      },
+      {
+        id: "lp8", cat: "Lernpsychologie", topic: "Modell-Lernen (Bandura)", pts: 4,
+        prompt: "Welche Bedingungen begünstigen nach Bandura das Lernen am Modell?",
+        sub: ["(1) Das Modell wird als kompetent, statushoch und ähnlich wahrgenommen.", "(2) Das gezeigte Verhalten des Modells wird sichtbar belohnt (stellvertretende Verstärkung).", "(3) Der Beobachter verfügt über ausreichende motorische Reproduktionsfähigkeiten.", "(4) Modelllernen findet nur statt, wenn das Modell eine real physisch anwesende Person ist."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) nicht." }, { k: "b", t: "Nur die Aussagen (1) und (2) treffen zu." }, { k: "c", t: "Nur Aussage (2) trifft zu." }, { k: "d", t: "Alle Aussagen (1) bis (4) treffen zu." }],
+        correct: "a",
+        hint: "Status/Ähnlichkeit, stellvertretende Belohnung und motorische Kompetenz fördern Modelllernen. Modelle können auch medial/symbolisch sein.",
+        exp: "Richtig ist (1), (2) und (3). Aussage (4) ist falsch, da symbolische Modelle (Film/Buch) nachweislich wirksam sind."
+      },
+      {
+        id: "lp9", cat: "Lernpsychologie", topic: "SORCK-Schema", pts: 5,
+        prompt: "Ordnen Sie die Komponenten des SORCK-Schemas nach Kanfer zu:",
+        type: "matrix", cols: ["Stimulus (S)", "Organismus (O)", "Reaktion (R)", "Contingency (K)", "Consequence (C)"],
+        rows: [
+          { id: "sk1", l: "Vorhergehende situative Reizbedingungen im Klassenzimmer", c: "Stimulus (S)" },
+          { id: "sk2", l: "Biologische Voraussetzungen und Lerngeschichte der Person", c: "Organismus (O)" },
+          { id: "sk3", l: "Das beobachtbare Verhalten auf motorischer oder verbaler Ebene", c: "Reaktion (R)" },
+          { id: "sk4", l: "Regelmäßigkeit und zeitlicher Abstand der Konsequenz (Verstärkungsplan)", c: "Contingency (K)" },
+          { id: "sk5", l: "Die auf das Verhalten folgende Konsequenz", c: "Consequence (C)" }
+        ],
+        hint: "S = Auslöser, O = Personendisposition, R = Verhalten, C = Folge, K = Kontingenzverhältnis.",
+        exp: "S = Reiz; O = Organismus; R = Reaktion; K = Kontingenz; C = Konsequenz."
+      },
+      {
+        id: "lp10", cat: "Lernpsychologie", topic: "Dreifach-Kontingenz", pts: 4,
+        prompt: "Was versteht Skinner unter der Dreifach-Kontingenz (Three-term Contingency)?",
+        type: "single",
+        options: [
+          { k: "a", t: "Die funktionale Verknüpfung aus diskriminativem Hinweisreiz (S^D), Verhalten (R) und Konsequenz (C)." },
+          { k: "b", t: "Die dreifache Wiederholung eines Lernstoffs zur Festigung im Langzeitgedächtnis." },
+          { k: "c", t: "Die Verknüpfung aus UCS, CS und Reflexreaktion." },
+          { k: "d", t: "Die Kopplung von Lehrererwartung, Schülerverhalten und Schulnote." }
+        ],
+        correct: "a",
+        hint: "Skinner operante Konditionierung: S^D -> R -> C.",
+        exp: "Richtig ist die Verknüpfung aus Hinweisreiz, Verhalten und Konsequenz (S^D - R - C)."
+      },
+      {
+        id: "lp11", cat: "Lernpsychologie", topic: "Premack-Prinzip", pts: 4,
+        prompt: "Wie lässt sich das Premack-Prinzip im Verhaltensmanagement beschreiben?",
+        type: "single",
+        options: [
+          { k: "a", t: "Ein Verhalten mit hoher Auftretenswahrscheinlichkeit (beliebte Aktivität) wird als Verstärker für ein Verhalten mit niedriger Rate genutzt." },
+          { k: "b", t: "Verhalten wird nur dann gelöscht, wenn man dem Schüler alle Privilegien entzieht." },
+          { k: "c", t: "Strikte Bestrafung führt schneller zu Einsicht als differenzielle Verstärkung." },
+          { k: "d", t: "Schüler lernen mathematische Operationen ausschließlich durch Beobachtung." }
+        ],
+        correct: "a",
+        hint: "'Erst die ungeliebte Aufgabe erledigen, danach die hoch geschätzte Aktivität ausüben'.",
+        exp: "Aktivitäten mit hoher spontaner Rate dienen als wirksame Verstärker für Aufgaben mit niedriger Ausführungsbereitschaft."
+      },
+      {
+        id: "lp12", cat: "Lernpsychologie", topic: "Bestrafung Typ I vs. II", pts: 5,
+        prompt: "Ordnen Sie die Maßnahmen den Bestrafungs- bzw. Verstärkungstypen zu:",
+        type: "matrix", cols: ["Positive Verstärkung", "Negative Verstärkung", "Bestrafung Typ I (direkt)", "Bestrafung Typ II (Entzug)"],
+        rows: [
+          { id: "bt1", l: "Dem Schüler wird nach einer Störung die Pause um 10 Minuten gekürzt (Response Cost).", c: "Bestrafung Typ II (Entzug)" },
+          { id: "bt2", l: "Die Lehrkraft gibt dem Schüler nach einer Beleidigung Strafarbeit auf.", c: "Bestrafung Typ I (direkt)" },
+          { id: "bt3", l: "Schüler dürfen früher in die Pause, weil sie zügig und leise gearbeitet haben.", c: "Negative Verstärkung" },
+          { id: "bt4", l: "Der Schüler erhält einen begehrten Bonus-Stempel für vollständige Aufgaben.", c: "Positive Verstärkung" }
+        ],
+        hint: "Typ I = aversiver Reiz hinzugefügt; Typ II = angenehmer Reiz entzogen; Neg. Verstärkung = aversiver Reiz entfällt.",
+        exp: "Pause weg = Entzug von Angenehmem (Typ II); Strafarbeit = Hinzufügen von Unangenehmem (Typ I); Früher gehen = Beenden von Pflichtzeit (neg. Verstärkung); Stempel = positiv."
+      },
+      {
+        id: "lp13", cat: "Lernpsychologie", topic: "Reizdiskrimination vs. Generalisierung", pts: 4,
+        prompt: "Welche Aussage beschreibt den Unterschied zwischen Generalisierung und Diskrimination?",
+        type: "single",
+        options: [
+          { k: "a", t: "Generalisierung bedeutet, dass ähnliche Reize ebenfalls die CR auslösen; Diskrimination bedeutet, nur auf den spezifischen CS zu reagieren." },
+          { k: "b", t: "Diskrimination bedeutet das Ausweiten der Angst auf alle Lehrer; Generalisierung die Beschränkung auf Mathe." },
+          { k: "c", t: "Beide Begriffe bezeichnen dasselbe Phänomen der Reizüberflutung." },
+          { k: "d", t: "Generalisierung ist nur im operanten Konditionieren möglich." }
+        ],
+        correct: "a",
+        hint: "Generalisierung: CR wird auf ähnliche Reize ausgeweitet. Diskrimination: Differenzierung zwischen Reizen.",
+        exp: "Generalisierung weitet die CR auf ähnliche Stimuli aus; Diskrimination grenzt die Reaktion trennscharf ein."
+      },
+      {
+        id: "lp14", cat: "Lernpsychologie", topic: "Differentielle Verstärkung (DRI)", pts: 4,
+        prompt: "Warum ist differentielle Verstärkung inkompatiblen Verhaltens (DRI) einer Bestrafung überlegen?",
+        sub: ["(1) Bestrafung zeigt dem Schüler nicht, welches Alternativverhalten erwünscht ist.", "(2) DRI verstärkt gezielt ein Verhalten, das physisch nicht gleichzeitig mit der Störung ausgeführt werden kann.", "(3) Bestrafung kann Flucht- und Vermeidungsreaktionen erzeugen.", "(4) DRI führt zu proaktiver Interferenz im Langzeitgedächtnis."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) ist falsch." }, { k: "b", t: "Nur die Aussagen (1) und (2) treffen zu." }, { k: "c", t: "Alle Aussagen treffen zu." }, { k: "d", t: "Nur Aussage (2) trifft zu." }],
+        correct: "a",
+        hint: "DRI baut erwünschte Alternativen auf und vermeidet Aversion/Aggression. Interferenz ist ein Gedächtnisbegriff.",
+        exp: "Richtig ist (1), (2) und (3). Kognitive Interferenz (4) hat mit Verhaltensmodifikation nichts zu tun."
+      },
+
+      /* --- 2. KOGNITION & GEDÄCHTNIS (12 Aufgaben) --- */
+      {
+        id: "kg1", cat: "Kognition", topic: "Kurzzeitgedächtnis (KZG)", pts: 4,
+        prompt: "Welche Aussagen treffen auf das Kurzzeitgedächtnis nach Atkinson & Shiffrin zu?",
+        sub: ["(1) Das KZG hat eine nahezu unbegrenzte Kapazität.", "(2) Das KZG verliert Infos unter anderem durch Zerfall und Interferenz.", "(3) Ohne Rehearsal beträgt die Behaltensdauer ca. 20–30 Sekunden.", "(4) Das KZG arbeitet streng modalitätsspezifisch getrennt für alle 5 Sinne."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (2) und (3) treffen zu; alle anderen nicht." }, { k: "b", t: "Die Aussagen (1) und (2) treffen zu; alle anderen nicht." }, { k: "c", t: "Die Aussagen (3) und (4) treffen zu; alle anderen nicht." }, { k: "d", t: "Nur Aussage (3) trifft zu." }],
+        correct: "a",
+        hint: "Kapazität 7 ± 2 Chunks; Dauer 20-30s ohne Wiederholung. Modalitätsspezifisch ist das sensorische Register.",
+        exp: "Richtig ist (2) und (3): KZG speichert 7±2 Chunks für 20-30s und unterliegt Interferenz/Spurenzerfall."
+      },
+      {
+        id: "kg2", cat: "Kognition", topic: "Langzeitgedächtnis (LZG)", pts: 4,
+        prompt: "Welche Aussagen treffen auf das Langzeitgedächtnis (LZG) zu?",
+        sub: ["(1) Das Wissen im LZG ist semantisch und strukturiert organisiert.", "(2) Die Speicherkapazität des LZG ist prinzipiell unbegrenzt.", "(3) Das LZG verliert Inhalte ausschließlich durch das Auslöschen von Nervenzellen.", "(4) Das Wiederauffinden hängt wesentlich von passenden Abrufreizen (Retrieval Cues) ab."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (4) treffen zu; Aussage (3) nicht." }, { k: "b", t: "Die Aussagen (1) und (3) treffen zu; die anderen nicht." }, { k: "c", t: "Nur die Aussagen (2) und (4) treffen zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "LZG ist semantisch vernetzt und unbegrenzt. Vergessen beruht meist auf Zugriffsstörungen (fehlende Reize).",
+        exp: "Richtig ist (1), (2) und (4). Vergessen im LZG ist primär eine Zugriffsstörung, kein Zelltod (daher 3 falsch)."
+      },
+      {
+        id: "kg3", cat: "Kognition", topic: "Arbeitsgedächtnis (Baddeley)", pts: 5,
+        prompt: "Ordnen Sie die Funktionen den Teilsystemen nach Baddeley zu:",
+        type: "matrix", cols: ["Phonologische Schleife", "Visuell-räumlicher Notizblock", "Beide", "Zentrale Exekutive"],
+        rows: [
+          { id: "ag1", l: "Gestattet fortwährendes sub-vokales inneres Sprechen", c: "Phonologische Schleife" },
+          { id: "ag2", l: "Übernimmt die Koordination von Informationsströmen", c: "Zentrale Exekutive" },
+          { id: "ag3", l: "Gestattet die mentale Rotation von Figuren", c: "Visuell-räumlicher Notizblock" },
+          { id: "ag4", l: "Besitzt eine strikt begrenzte Verarbeitungskapazität", c: "Beide" },
+          { id: "ag5", l: "Hält akustisch encodierte Sprachsignale kurzfristig aktiv", c: "Phonologische Schleife" }
+        ],
+        hint: "Zentrale Exekutive steuert. Die Hilfssysteme (Phonologisch & Notizblock) sind kapazitätsbegrenzt.",
+        exp: "Sub-vokales Sprechen = Phonologische Schleife; Rotation = Notizblock; Beide sind limitiert; Steuerung = Zentrale Exekutive."
+      },
+      {
+        id: "kg4", cat: "Kognition", topic: "Verarbeitungstiefe", pts: 4,
+        prompt: "Welche Aufgabenstellung regt nach Craik & Lockhart die TIEFSTE Verarbeitung an?",
+        type: "single",
+        options: [
+          { k: "a", t: "Zählen, wie viele Vokale und Konsonanten das Wort enthält (physikalisch)." },
+          { k: "b", t: "Prüfen, ob sich das Wort auf ein anderes Wort reimt (phonemisch)." },
+          { k: "c", t: "Einen Beispielsatz bilden, der die inhaltliche Bedeutung erklärt (semantisch)." },
+          { k: "d", t: "Das Wort in Großbuchstaben dreimal abschreiben." }
+        ],
+        correct: "c",
+        hint: "Flach = visuell/graphisch; Mittel = phonemisch; Tief = semantisch/bedeutungsbezogen.",
+        exp: "Semantische Bedeutungserklärung erzeugt die tiefste Gedächtnisspur und höchste Behaltensleistung."
+      },
+      {
+        id: "kg5", cat: "Kognition", topic: "Elaboration vs. Organisation", pts: 5,
+        prompt: "Ordnen Sie die Lernaktivitäten den Gedächtnisstrategien zu:",
+        type: "matrix", cols: ["Elaboration", "Organisation", "Keine von beiden (Wiederholung)"],
+        rows: [
+          { id: "st1", l: "Schüler erstellen eine hierarchische Concept Map zum Fachtext.", c: "Organisation" },
+          { id: "st2", l: "Schüler denken sich eigene konkrete Alltagsbeispiele aus.", c: "Elaboration" },
+          { id: "st3", l: "Schüler gliedern den Text und formulieren Zwischenüberschriften.", c: "Organisation" },
+          { id: "st4", l: "Schüler lesen den Text viermal hintereinander aufmerksam durch.", c: "Keine von beiden (Wiederholung)" },
+          { id: "st5", l: "Schüler verbinden neue Inhalte mit vorhandenem Vorwissen.", c: "Elaboration" }
+        ],
+        hint: "Organisation = strukturieren, hierarchisieren. Elaboration = Vorwissensverknüpfung, Beispiele finden.",
+        exp: "Concept Maps & Überschriften = Organisation; Beispiele & Vorwissen = Elaboration; Mehrfaches Lesen = Wiederholung."
+      },
+      {
+        id: "kg6", cat: "Kognition", topic: "Interferenz (Emma)", pts: 4,
+        prompt: "Emma liest vor dem Lernen von Spanischvokabeln einen französischen Text. Im Test schreibt sie versehentlich französische Vokabeln auf. Welcher Effekt liegt vor?",
+        type: "single",
+        options: [
+          { k: "a", t: "Retroaktive Interferenz (Neues stört Altes)." },
+          { k: "b", t: "Proaktive Interferenz (Zuvor Gelerntes stört nachfolgend Gelerntes)." },
+          { k: "c", t: "Reine Löschung durch Spurenzerfall." },
+          { k: "d", t: "Retrograde Amnesie." }
+        ],
+        correct: "b",
+        hint: "Proaktiv: Zeitlich Früheres wirkt vorwärts und stört Neues.",
+        exp: "Das zuvor Gelesene (Französisch) behindert den Abruf des danach Gelernten (Spanisch) = proaktive Interferenz."
+      },
+      {
+        id: "kg7", cat: "Kognition", topic: "Wissensarten", pts: 4,
+        prompt: "Welche Zuordnung zwischen Wissensform und Beispiel ist korrekt?",
+        sub: ["(1) 'Wissen, dass Paris Hauptstadt von Frankreich ist' = Deklarativ (semantisch).", "(2) 'Einen Schal fehlerfrei mit zwei Nadeln stricken' = Prozedural.", "(3) 'Sich an den ersten Schultag erinnern' = Episodisch.", "(4) 'Ein Script für den Ablauf eines Restaurantbesuchs abrufen' = Prozedural-schematisch."],
+        type: "single",
+        options: [{ k: "a", t: "Alle Aussagen (1) bis (4) sind fachlich zutreffend." }, { k: "b", t: "Nur Aussagen (1) und (2) treffen zu." }, { k: "c", t: "Nur Aussagen (1) und (3) treffen zu." }, { k: "d", t: "Aussage (4) ist falsch, alle anderen treffen zu." }],
+        correct: "a",
+        hint: "Deklarativ = Fakten; Prozedural = Abläufe/Fertigkeiten; Episodisch = persönliche Erlebnisse.",
+        exp: "Richtig ist (a): Alle vier Aussagen ordnen die Wissensarten nach Anderson korrekt zu."
+      },
+      {
+        id: "kg8", cat: "Kognition", topic: "Wissensrepräsentation", pts: 4,
+        prompt: "Ordnen Sie die Beispiele den Modellen der Wissensrepräsentation zu:",
+        type: "matrix", cols: ["Prototyp", "Produktionssystem", "Merkmalsmodell", "Script"],
+        rows: [
+          { id: "wr1", l: "Peter hielt Wale für Fische, weil sie typische äußere Fischformen zeigen.", c: "Prototyp" },
+          { id: "wr2", l: "Sven beherrscht die Wenn-Dann-Abfolge zur Zubereitung einer Soße.", c: "Produktionssystem" },
+          { id: "wr3", l: "Benjamin erkennt einen Vogel, weil er Federn, Flügel und Schnabel hat.", c: "Merkmalsmodell" },
+          { id: "wr4", l: "Jane weiß im Restaurant genau, wann Bestellung, Essen und Zahlen folgen.", c: "Script" }
+        ],
+        hint: "Prototyp = typischer Vertreter. Produktionssystem = Wenn-Dann-Regeln. Merkmalsmodell = Kriterien. Script = Ablauf.",
+        exp: "Wal = Prototyp; Rezept = Produktionssystem; Vogelmerkmale = Merkmalsmodell; Restaurant = Script."
+      },
+      {
+        id: "kg9", cat: "Kognition", topic: "Behaltensleistung bei TV", pts: 4,
+        prompt: "Warum erinnern sich viele Zuschauer trotz aufwendiger TV-Grafiken am nächsten Tag kaum an die Inhalte?",
+        type: "single",
+        options: [
+          { k: "a", t: "Weil die Zuschauer sich nicht aktiv mit den Infos auseinandersetzen, sondern diese passiv flach rezipieren." },
+          { k: "b", t: "Weil das Auge bewegte Bilder nicht im Arbeitsgedächtnis speichern kann." },
+          { k: "c", t: "Weil Fernsehen grundsätzlich zu retroaktiver Amnesie führt." },
+          { k: "d", t: "Weil auditive und visuelle Reize sich im Gehirn gegenseitig löschen." }
+        ],
+        correct: "a",
+        hint: "Craik & Lockhart: Behaltensdauer hängt von mentaler Aktivität ab, nicht von passiver Reizung.",
+        exp: "Ohne aktive kognitive Elaboration (tiefe semantische Verarbeitung) zerfallen passiv konsumierte Fakten rasch."
+      },
+      {
+        id: "kg10", cat: "Kognition", topic: "Cognitive Load Theory", pts: 5,
+        prompt: "Ordnen Sie die Belastungsarten nach Sweller zu:",
+        type: "matrix", cols: ["Intrinsic Load", "Extraneous Load", "Germane Load"],
+        rows: [
+          { id: "cl1", l: "Belastung durch unübersichtlich gestaltetes, chaotisches Unterrichtsmaterial", c: "Extraneous Load" },
+          { id: "cl2", l: "Belastung, die sich aus der inhärenten Komplexität des Gegenstands ergibt", c: "Intrinsic Load" },
+          { id: "cl3", l: "Mentale Anstrengung, die gezielt dem Schema-Aufbau dient", c: "Germane Load" },
+          { id: "cl4", l: "Beanspruchung durch Suchen nach zusammengehörigen Teilen (Split-Attention)", c: "Extraneous Load" }
+        ],
+        hint: "Intrinsic = Stoffschwierigkeit; Extraneous = schlechtes Layout; Germane = Schemabildung.",
+        exp: "Chaotisches Layout & Split-Attention = Extraneous; Fachkomplexität = Intrinsic; Schema-Konstruktion = Germane."
+      },
+      {
+        id: "kg11", cat: "Kognition", topic: "Dual-Coding-Theorie", pts: 4,
+        prompt: "Was postuliert die Dual-Coding-Theorie nach Allan Paivio?",
+        type: "single",
+        options: [
+          { k: "a", t: "Informationen werden über zwei getrennte, vernetzte Teilsysteme verarbeitet: ein verbales und ein bildhaftes System." },
+          { k: "b", t: "Schüler können gleichzeitig zwei Fremdsprachen ohne gegenseitige Störung lernen." },
+          { k: "c", t: "Texte müssen immer durch zwei Lehrkräfte synchron vorgetragen werden." },
+          { k: "d", t: "Visuelle Information verdrängt auditive Information nach exakt 20 Sekunden." }
+        ],
+        correct: "a",
+        hint: "Parallele Enkodierung in zwei Kanälen (Wort + Bild) führt zu besseren Abrufchancen.",
+        exp: "Die parallele Enkodierung in verbalen und visuellen Systemen erzeugt stabilere Gedächtnisspuren."
+      },
+      {
+        id: "kg12", cat: "Kognition", topic: "Repräsentationsmodi (Bruner)", pts: 4,
+        prompt: "In welcher Reihenfolge durchläuft nach Bruner der Aufbau mathematischen Wissens die Stufen?",
+        type: "single",
+        options: [
+          { k: "a", t: "Enaktiv (handelnd mit Material) -> Ikonisch (bildhaft-visuell) -> Symbolisch (formal/abstrakt)." },
+          { k: "b", t: "Symbolisch -> Enaktiv -> Ikonisch." },
+          { k: "c", t: "Ikonisch -> Symbolisch -> Enaktiv." },
+          { k: "d", t: "Rein verbal -> Sensorisch -> Operant." }
+        ],
+        correct: "a",
+        hint: "EIS-Prinzip: Enaktiv (Handlung) -> Ikonisch (Bild) -> Symbolisch (Formel).",
+        exp: "Das EIS-Prinzip bildet das Fundament: Konkrete Handlung -> bildhafte Veranschaulichung -> abstrakte Symbole."
+      },
+
+      /* --- 3. MOTIVATION & ATTRIBUTION (14 Aufgaben) --- */
+      {
+        id: "mo1", cat: "Motivation", topic: "Kausalattribution (Hans)", pts: 4,
+        caseStudy: "Hans wählt extrem leichte Aufgaben ('babyleicht'). Bei schweren bricht er sofort ab: 'Ich bin nicht begabt für Mathe.' Hat er doch Erfolg, sagt er: 'Das war reines Glück.'",
+        prompt: "Wie sind Hans' Attributionen nach Weiner dimensional einzuordnen?",
+        type: "matrix", cols: ["Internal-Stabil", "Internal-Variabel", "External-Stabil", "External-Variabel"],
+        rows: [
+          { id: "at1", l: "Hans' Erklärung bei Misserfolg ('Ich bin unbegabt für Mathe')", c: "Internal-Stabil" },
+          { id: "at2", l: "Hans' Erklärung bei schwerem Erfolg ('Das war reines Glück')", c: "External-Variabel" },
+          { id: "at3", l: "Hans' Erklärung bei leichten Aufgaben ('Die Aufgaben waren extrem leicht')", c: "External-Stabil" }
+        ],
+        hint: "Begabung = internal-stabil. Glück = external-variabel. Aufgabenleichtigkeit = external-stabil.",
+        exp: "Misserfolg = internal-stabil (Hilflosigkeit); Erfolg = external-variabel entwertet (kein Stolz möglich)."
+      },
+      {
+        id: "mo2", cat: "Motivation", topic: "Selbstbewertungsmodell (Heckhausen)", pts: 4,
+        prompt: "Welche Folgen hat Hans' Verhalten nach Heckhausens Selbstbewertungsmodell?",
+        sub: ["(1) Er bildet eine chronisch negative Affektbilanz (viel Scham, kein Stolz) aus.", "(2) Er kann seine eigenen Kompetenzen nicht realistisch einschätzen.", "(3) Er entwickelt eine hohe Situations-Ergebnis-Erwartung und gesteigerte Ausdauer.", "(4) Er überschätzt seine Fähigkeiten bei komplexen Aufgaben systematisch."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1) und (2) treffen zu; die anderen nicht." }, { k: "b", t: "Nur Aussage (1) trifft zu." }, { k: "c", t: "Die Aussagen (2) und (4) treffen zu; die anderen nicht." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "Extremaufgaben liefern keinen diagnostischen Wert; Erfolgsentwertung hält die Affektbilanz negativ.",
+        exp: "Richtig ist (1) und (2): Mangelnder diagnostischer Wert verhindert Selbsteinschätzung; Affektbilanz bleibt negativ."
+      },
+      {
+        id: "mo3", cat: "Motivation", topic: "Erfolgszuversichtliche Attribution", pts: 4,
+        prompt: "Welche Aussagen wären im Sinne einer erfolgszuversichtlichen Attribution nach Misserfolg günstig?",
+        sub: ["(1) 'Ich habe mich nicht intensiv genug vorbereitet.' (Anstrengung)", "(2) 'Ich habe nicht die nötige Intelligenz für diesen Typ.' (Fähigkeit)", "(3) 'Ich habe die falsche Lernstrategie angewendet.' (Strategie)", "(4) 'Der Lehrer hat die Klausur mit Absicht unlösbar gestellt.'"],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1) und (3) sind motivationsförderlich; (2) und (4) nicht." }, { k: "b", t: "Nur Aussage (1) ist günstig." }, { k: "c", t: "Nur Aussage (2) ist günstig." }, { k: "d", t: "Alle Aussagen sind günstig." }],
+        correct: "a",
+        hint: "Günstig sind variable, kontrollierbare Faktoren (Anstrengung, Strategie).",
+        exp: "Richtig ist (1) und (3): Mangelnde Anstrengung und falsche Strategien sind veränderbar und erhalten die Zuversicht."
+      },
+      {
+        id: "mo4", cat: "Motivation", topic: "Erweitertes Kognitives Modell", pts: 4,
+        prompt: "Welche Erwartungskomponente nach Heckhausen & Rheinberg liegt vor?",
+        type: "matrix", cols: ["Situations-Ergebnis (S-E)", "Handlungs-Ergebnis (H-E)", "Ergebnis-Folge (E-F)", "Keine Erwartungskomponente"],
+        rows: [
+          { id: "ek1", l: "'Ich lerne nicht, weil der Lehrer sowieso allen eine Eins schenkt.'", c: "Situations-Ergebnis (S-E)" },
+          { id: "ek2", l: "'Wenn ich fleißig übe, kann ich die Aufgaben sicher lösen.'", c: "Handlungs-Ergebnis (H-E)" },
+          { id: "ek3", l: "'Mit der guten Note sichere ich mir meinen Wunschstudienplatz.'", c: "Ergebnis-Folge (E-F)" },
+          { id: "ek4", l: "'Ich lerne für Mathe, weil mir das Knobeln an sich Spaß macht.'", c: "Keine Erwartungskomponente" }
+        ],
+        hint: "S-E = Situation regelt es. H-E = Handeln führt zum Ziel. E-F = Note führt zu Beruf. Spaß = Anreiz.",
+        exp: "1: S-E; 2: H-E; 3: E-F; 4: Tätigkeitsspezifischer Anreiz (keine Erwartungskomponente)."
+      },
+      {
+        id: "mo5", cat: "Motivation", topic: "Risiko-Wahl-Modell (Atkinson)", pts: 4,
+        prompt: "Welche Aussagen lassen sich mit dem Risiko-Wahl-Modell begründen?",
+        sub: ["(1) Der Erfolgsanreiz ist invers zur Erfolgswahrscheinlichkeit: A_e = 1 - W_e.", "(2) Die Motivation von Erfolgsmotivierten ist bei mittlerer Schwierigkeit (W_e ≈ 0.5) am höchsten.", "(3) Misserfolgsmeider wählen bevorzugt extrem leichte oder extrem schwere Aufgaben.", "(4) Mittelschwere Aufgaben maximieren die Motivation von Misserfolgsängstlichen."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) nicht." }, { k: "b", t: "Die Aussagen (2) und (4) treffen zu; die anderen nicht." }, { k: "c", t: "Nur die Aussagen (1) und (3) treffen zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "Peak der Motivation bei W_e = 0.5 für Erfolgsmotivierte. Misserfolgsmeider fliehen vor Aufgaben mit 50% Chance.",
+        exp: "Richtig ist (1), (2) und (3). Aussage (4) ist falsch, da Misserfolgsmeider mittelschwere Aufgaben meiden."
+      },
+      {
+        id: "mo6", cat: "Motivation", topic: "Selbstwirksamkeitsquellen (Frau Peters)", pts: 5,
+        caseStudy: "Frau Peters unterstützt Schüler nach Banduras Modell der Selbstwirksamkeit.",
+        prompt: "An welcher Selbstwirksamkeitsquelle setzen die Maßnahmen an?",
+        type: "matrix", cols: ["Eigene Erfolge", "Beobachtete Erfolge", "Verbale Ermutigung", "Emotionale Regulation"],
+        rows: [
+          { id: "sw1", l: "Sie teilt Carla mit, dass sie Fortschritte gemacht hat und es schaffen wird.", c: "Verbale Ermutigung" },
+          { id: "sw2", l: "Sie lässt Theo den Lösungsweg anhand eines Musters nachvollziehen.", c: "Beobachtete Erfolge" },
+          { id: "sw3", l: "Sie rät Julia durchzuatmen und Fehler als Lernchance zu begreifen.", c: "Emotionale Regulation" },
+          { id: "sw4", l: "Sie gibt Erin eine Aufgabe ähnlich zu früher gemeisterten Aufgaben.", c: "Eigene Erfolge" },
+          { id: "sw5", l: "Sie zeigt Paul ein Video eines Mitschülers, der die Aufgabe vorrechnet.", c: "Beobachtete Erfolge" }
+        ],
+        hint: "Mastery (eigene Erfolge), Modell (beobachtete Erfolge), Persuasion (Zusprechen), Emotionale Regulation.",
+        exp: "Carla = Verbale Ermutigung; Theo & Paul = Modell/Beobachtung; Julia = Regulation; Erin = Eigene Erfolge."
+      },
+      {
+        id: "mo7", cat: "Motivation", topic: "Förderung von Tabea", pts: 4,
+        caseStudy: "Tabea wählt stets die allerschwersten Aufgaben, scheitert und sagt: 'Ich bin nicht schlau genug für Mathe.'",
+        prompt: "Welche Empfehlungen nach Heckhausen sind sinnvoll?",
+        sub: ["(1) Tabea unterstützen, Aufgaben mittlerer Schwierigkeit entsprechend ihren Fähigkeiten zu wählen.", "(2) Ihr verdeutlichen, dass Scheitern an extrem schweren Aufgaben normal ist und nicht an Dummheit liegt.", "(3) Ihr raten, ausschließlich extrem leichte Pillepalle-Aufgaben zu rechnen.", "(4) Ankündigen, dass alle Übungen ab sofort streng benotet werden."],
+        type: "single",
+        options: [{ k: "a", t: "Die Empfehlungen (1) und (2) sind förderlich; (3) und (4) sind schädlich." }, { k: "b", t: "Nur Empfehlung (1) ist förderlich." }, { k: "c", t: "Die Empfehlungen (1) und (4) treffen zu." }, { k: "d", t: "Alle Empfehlungen treffen zu." }],
+        correct: "a",
+        hint: "Aufgabenpassung herstellen und fehlerhafte Begabungszuschreibung auflösen.",
+        exp: "Richtig ist (1) und (2): Realistische Zielsetzung fördern und Attribution auf mangelnde Intelligenz entkräften."
+      },
+      {
+        id: "mo8", cat: "Motivation", topic: "Praktikumswahl Anton", pts: 4,
+        caseStudy: "Anton will ein Praktikum in der Metallbranche machen, um dort eine Ausbildung zu beginnen. Einen sicheren Kindergartenplatz lehnt er ab und recherchiert motiviert für Metall.",
+        prompt: "Wie erklärt das Erweiterte Kognitive Modell Antons Verhalten?",
+        sub: ["(1) Anton hat für das Metallpraktikum eine hohe Handlungs-Ergebnis-Erwartung (er traut sich die Bewerbung zu).", "(2) Anton hat eine hohe Ergebnis-Folge-Erwartung (er verspricht sich beste Chancen auf den Beruf).", "(3) Für den Kindergartenplatz hat er eine extrem hohe Tätigkeits-Anreiz-Erwartung.", "(4) Seine Motivation resultiert aus einer extrem niedrigen Situations-Folge-Erwartung."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1) und (2) treffen zu; alle anderen nicht." }, { k: "b", t: "Nur Aussage (2) trifft zu." }, { k: "c", t: "Die Aussagen (1), (3) und (4) treffen zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "H-E = Glaube, die Bewerbung zu schaffen. E-F = Wert des Praktikums für die spätere Ausbildung.",
+        exp: "Richtig ist (1) und (2): Hohe Selbstwirksamkeit (H-E) und hohe Valenz der Berufsfolgen (E-F) lenken sein Handeln."
+      },
+      {
+        id: "mo9", cat: "Motivation", topic: "Flow-Erleben (Tom)", pts: 4,
+        caseStudy: "Tom lernt Afrika-Topographie. Sein Atlas liegt in der Schule; der englische Atlas überfordert ihn sprachlich. Nebenan dröhnt laute Musik des Bruders. Er gerät in keinen Flow.",
+        prompt: "Warum gerät Tom in keinen Flow?",
+        sub: ["(1) Die sprachlichen Anforderungen des englischen Atlasses übersteigen Toms Fertigkeiten.", "(2) Externe Lärmstörungen verhindern die Konzentration auf den Aufgabenfluss.", "(3) Die Passung zwischen Herausforderung und Handlungskompetenz ist gestört.", "(4) Tom hat eine zu hohe Handlungs-Folge-Erwartung."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) nicht." }, { k: "b", t: "Nur Aussagen (1) und (2) treffen zu." }, { k: "c", t: "Nur Aussagen (2) und (3) treffen zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "Flow verlangt Passung von Fähigkeit und Anforderung sowie ungestörten Fokus.",
+        exp: "Richtig ist (1), (2) und (3): Überforderung und Lärm verhindern das Eintreten in den Flow-Kanal."
+      },
+      {
+        id: "mo10", cat: "Motivation", topic: "Krapp Interessentheorie", pts: 5,
+        prompt: "Ordnen Sie die Beispiele der Interessentheorie zu:",
+        type: "matrix", cols: ["Persönliches Interesse", "Situationales Interesse"],
+        rows: [
+          { id: "it1", l: "Markus, begeisterter Schwimmer, liest einen Artikel über Kraultechnik.", c: "Persönliches Interesse" },
+          { id: "it2", l: "Julia findet Latein spannend, seit Asterix-Comics genutzt werden.", c: "Situationales Interesse" },
+          { id: "it3", l: "Annette rechnet konzentriert Mathe, verpackt in eine Piratengeschichte.", c: "Situationales Interesse" },
+          { id: "it4", l: "Felix baut Modellflugzeuge und studiert Fachliteratur dazu.", c: "Persönliches Interesse" },
+          { id: "it5", l: "Ein lauter Knall bei einem Chemie-Experiment weckt Neugierde.", c: "Situationales Interesse" }
+        ],
+        hint: "Persönlich = überdauernde Wertschätzung. Situational = durch situative Anreize induziert.",
+        exp: "Markus & Felix = personenspezifisch; Comics, Piraten und Knallversuch = situational."
+      },
+      {
+        id: "mo11", cat: "Motivation", topic: "Selbstbestimmungstheorie (Deci & Ryan)", pts: 4,
+        prompt: "Ordnen Sie die Aussagen den Regulationsstufen extrinsischer Motivation zu:",
+        type: "matrix", cols: ["External", "Introjiziert", "Identifiziert", "Integriert"],
+        rows: [
+          { id: "sd1", l: "'Ich lerne Französisch nur, weil sonst das Taschengeld gestrichen wird.'", c: "External" },
+          { id: "sd2", l: "'Ich lerne fleißig, weil ich mich sonst schuldig fühlen würde.'", c: "Introjiziert" },
+          { id: "sd3", l: "'Ich lerne Physik, weil ich es für mein späteres Studium brauche.'", c: "Identifiziert" },
+          { id: "sd4", l: "'Umweltschutz zu lernen entspricht voll meinen eigenen Wertvorstellungen.'", c: "Integriert" }
+        ],
+        hint: "External = Strafe/Belohnung; Introjiziert = Schuld/Scham; Identifiziert = Einsicht/Nutzen; Integriert = Werteharmonie.",
+        exp: "Taschengeld = External; Schuld = Introjiziert; Nutzen fürs Studium = Identifiziert; Werte = Integriert."
+      },
+      {
+        id: "mo12", cat: "Motivation", topic: "Korrumpierungseffekt", pts: 4,
+        prompt: "Wann tritt der Korrumpierungseffekt ein?",
+        type: "single",
+        options: [
+          { k: "a", t: "Wenn eine ursprünglich intrinsisch motivierte Tätigkeit plötzlich materiell belohnt wird und danach die Eigenmotivation sinkt." },
+          { k: "b", t: "Wenn Schüler durch ständiges Tadeln gleichgültig gegenüber Noten werden." },
+          { k: "c", t: "Wenn eine schwierige Aufgabe durch Vereinfachung langweilig wird." },
+          { k: "d", t: "Wenn Schüler nur für Hausaufgaben gelobt werden." }
+        ],
+        correct: "a",
+        hint: "Extrinsische Belohnung verdrängt das Gefühl der Selbstbestimmung/Autonomie.",
+        exp: "Richtig ist (a): Unerwartetes Belohnen intrinsischer Tätigkeiten untergräbt das Autonomieerleben."
+      },
+      {
+        id: "mo13", cat: "Motivation", topic: "Big-Fish-Little-Pond-Effekt", pts: 4,
+        prompt: "Was besagt der Big-Fish-Little-Pond-Effekt nach Marsh?",
+        type: "single",
+        options: [
+          { k: "a", t: "Leistungsgleiche Schüler haben in einer schwächeren Klasse ein höheres akademisches Selbstkonzept als in einer leistungsstarken Bezugsgruppe." },
+          { k: "b", t: "Schüler an großen Schulen erbringen generell schlechtere Leistungen als an kleinen Schulen." },
+          { k: "c", t: "Begabte Schüler schwimmen im Unterricht immer oben auf." },
+          { k: "d", t: "Lehrkräfte bevorzugen kleine Klassen zur milderen Benotung." }
+        ],
+        correct: "a",
+        hint: "Soziale Bezugsgruppe als Maßstab: In schwächerer Klasse fühlt man sich kompetenter.",
+        exp: "Das akademische Selbstkonzept wird stark durch den Vergleich mit dem Schnitt der eigenen Klasse geprägt."
+      },
+      {
+        id: "mo14", cat: "Motivation", topic: "2x2 Zielorientierung", pts: 4,
+        prompt: "Welche vier Zielklassen unterscheidet das 2x2-Modell nach Elliot & McGregor?",
+        type: "single",
+        options: [
+          { k: "a", t: "Mastery-Approach, Mastery-Avoidance, Performance-Approach, Performance-Avoidance." },
+          { k: "b", t: "Lernzeit, Hausaufgabenzeit, Prüfungszeit, Erholungszeit." },
+          { k: "c", t: "Intrinsisch, extrinsisch, amotiviert, hypermotiviert." },
+          { k: "d", t: "Sozial, individuell, kriterial, subjektiv." }
+        ],
+        correct: "a",
+        hint: "Ziel (Mastery vs. Performance) x Valenz (Annäherung vs. Vermeidung).",
+        exp: "Richtig ist (a): Differenzierung nach Standard (Aufgabe/Selbst vs. andere) und Richtung (Approach vs. Avoidance)."
+      },
+
+      /* --- 4. UNTERRICHTSQUALITÄT & MODELLE (12 Aufgaben) --- */
+      {
+        id: "uq1", cat: "Unterricht", topic: "Angebots-Nutzungs-Modell (Helmke)", pts: 6,
+        prompt: "Ordnen Sie die Faktoren den Komponenten nach Helmke zu:",
+        type: "matrix", cols: ["Lehrperson", "Lehrangebot", "Lernende Person", "Kontext"],
+        rows: [
+          { id: "an1", l: "Lehrkraft verfügt über hohes fachdidaktisches Professionswissen.", c: "Lehrperson" },
+          { id: "an2", l: "Strukturierte Aufgaben mit gestuften Scaffolds stehen bereit.", c: "Lehrangebot" },
+          { id: "an3", l: "In der Klasse herrscht ein respektvolles, angstfreies Arbeitsklima.", c: "Kontext" },
+          { id: "an4", l: "Lernende haben gravierende Vorwissenslücken in Grundbegriffen.", c: "Lernende Person" },
+          { id: "an5", l: "Haltung im Elternhaus entwertet schulische Bildungsanstrengung.", c: "Kontext" },
+          { id: "an6", l: "Die Lehrkraft gibt informatives Feedback zum Lösungsweg.", c: "Lehrangebot" }
+        ],
+        hint: "Wissen = Lehrperson; Material/Feedback = Angebot; Vorwissen = Lernende; Klima/Eltern = Kontext.",
+        exp: "Professionswissen = Lehrperson; Material/Feedback = Angebot; Vorwissen = Lernende; Klima/Familie = Kontext."
+      },
+      {
+        id: "uq2", cat: "Unterricht", topic: "Kontextvariablen (Helmke)", pts: 4,
+        prompt: "Welche Faktoren zählen bei Helmke zu den KONTEXTVARIABLEN?",
+        sub: ["(1) Schulform und Schulprofil", "(2) Klassenzusammensetzung", "(3) Schulklima und Klassenklima", "(4) Fachdidaktische Kompetenz der Lehrperson", "(5) Vorwissen des Schülers"],
+        type: "single",
+        options: [{ k: "a", t: "Die Faktoren (1), (2) und (3) sind Kontextvariablen; (4) und (5) nicht." }, { k: "b", t: "Nur die Faktoren (1) und (3) sind Kontextvariablen." }, { k: "c", t: "Alle Faktoren (1) bis (5) sind Kontextvariablen." }, { k: "d", t: "Nur Faktor (2) ist eine Kontextvariable." }],
+        correct: "a",
+        hint: "Kontext = institutionelle Rahmenbedingungen. Lehrkompetenz = Person; Vorwissen = Lerner.",
+        exp: "Richtig ist (1), (2) und (3): Schulform, Zusammensetzung und Klima bilden den institutionellen Kontext."
+      },
+      {
+        id: "uq3", cat: "Unterricht", topic: "Carrolls Modell (1963)", pts: 4,
+        prompt: "Welche Kernaussage trifft John B. Carroll bezüglich Lernergebnissen?",
+        type: "single",
+        options: [
+          { k: "a", t: "Lernerfolg ist das Verhältnis aus tatsächlich aufgewendeter zu individuell benötigter Lernzeit." },
+          { k: "b", t: "Lernerfolg ist ausschließlich durch angeborene Begabung determiniert." },
+          { k: "c", t: "Nominale Unterrichtszeit ist der stärkste Prädiktor für Schulerfolg." },
+          { k: "d", t: "Offene Lernformen führen stets zu gleichen Lernergebnissen." }
+        ],
+        correct: "a",
+        hint: "Carroll: Degree of learning = f(Time spent / Time needed).",
+        exp: "Lernerfolg resultiert aus dem Verhältnis von tatsächlich aufgewendeter zu benötigter Lernzeit."
+      },
+      {
+        id: "uq4", cat: "Unterricht", topic: "Mastery Learning (Bloom)", pts: 4,
+        prompt: "Was ist der fundamentale Kerngedanke des Mastery Learning nach Bloom?",
+        type: "single",
+        options: [
+          { k: "a", t: "Fast alle Lernenden können Ziele erreichen, wenn ihnen genug Zeit gegeben und Lücken formativ geschlossen werden." },
+          { k: "b", t: "Nur die oberen 10% eines Jahrgangs können den Stoff beherrschen." },
+          { k: "c", t: "Lernen gelingt am besten ohne diagnostische Rückmeldungen." },
+          { k: "d", t: "Frontalunterricht garantiert maximale Meisterschaft." }
+        ],
+        correct: "a",
+        hint: "Begabung bestimmt Lerngeschwindigkeit, nicht Leistungsgrenze. Mit formativen Schleifen schaffen es fast alle.",
+        exp: "Richtig ist (a): Unter adaptiver Lernzeit und formativen Tests können nahezu alle Schüler Meisterschaft erlangen."
+      },
+      {
+        id: "uq5", cat: "Unterricht", topic: "Merkmale guten Unterrichts (Meyer)", pts: 4,
+        prompt: "Welche Merkmale gehören zu Meyers 10 Merkmalen guten Unterrichts?",
+        sub: ["(1) Hoher Anteil echter Lernzeit (Time on task)", "(2) Klare Strukturierung des Unterrichts", "(3) Sinnstiftendes Kommunizieren", "(4) Transparente Leistungserwartungen", "(5) Nominale Unterrichtszeit maximieren"],
+        type: "single",
+        options: [{ k: "a", t: "Die Merkmale (1), (2), (3) und (4) gehören dazu; Merkmal (5) nicht." }, { k: "b", t: "Nur die Merkmale (1) und (2) gehören dazu." }, { k: "c", t: "Alle Merkmale (1) bis (5) gehören dazu." }, { k: "d", t: "Nur Merkmal (4) gehört dazu." }],
+        correct: "a",
+        hint: "Echte Lernzeit, Struktur, Kommunikation und Erwartungen gehören dazu. Nominale Zeit ist nur der Stundenplan.",
+        exp: "Richtig ist (1), (2), (3) und (4). Nominale Unterrichtszeit (5) ist kein Qualitätskriterium."
+      },
+      {
+        id: "uq6", cat: "Unterricht", topic: "Scholastik-Studie (Weinert & Helmke)", pts: 4,
+        prompt: "Welche Merkmale führten in der Scholastik-Studie zum höchsten Leistungszuwachs?",
+        sub: ["(1) Effiziente Klassenführung (Classroom Management)", "(2) Hohe Strukturiertheit und Klarheit der Instruktion", "(3) Ständige Methodenwechsel alle 10 Minuten", "(4) Sparsamer Einsatz von Übungszeit"],
+        type: "single",
+        options: [{ k: "a", t: "Die Merkmale (1) und (2) treffen zu; die Merkmale (3) und (4) nicht." }, { k: "b", t: "Nur Merkmal (1) trifft zu." }, { k: "c", t: "Die Merkmale (1), (2) und (3) treffen zu." }, { k: "d", t: "Alle Merkmale treffen zu." }],
+        correct: "a",
+        hint: "Klassenführung (Störungsprävention) und Strukturiertheit sind die stärksten Prädiktoren.",
+        exp: "Richtig ist (1) und (2): Klassenführung und Struktur erwiesen sich empirisch als stärkste Leistungsförderer."
+      },
+      {
+        id: "uq7", cat: "Unterricht", topic: "Hattie-Studie & Cohens d", pts: 4,
+        prompt: "Welche Aussage über Hatties Metaanalysen und 'Cohens d' ist zutreffend?",
+        type: "single",
+        options: [
+          { k: "a", t: "Cohens d ist ein Maß für die Effektstärke; Werte ab d > 0.40 gelten als überdurchschnittlich lernwirksam." },
+          { k: "b", t: "Cohens d gibt lediglich die Anzahl der Probanden in einer Studie an." },
+          { k: "c", t: "Nach Hattie hat formatives Feedback eine vernachlässigbare Effektstärke (d < 0.10)." },
+          { k: "d", t: "Offener Unterricht erzielt bei Hattie die höchsten Effektstärken (d > 1.0)." }
+        ],
+        correct: "a",
+        hint: "Hinge-Point bei d = 0.40. Formatives Feedback liegt bei d ≈ 0.73.",
+        exp: "Richtig ist (a): Ab d > 0.40 beginnt die Zone gewünschter Effekte. Feedback ist Spitzenreiter."
+      },
+      {
+        id: "uq8", cat: "Unterricht", topic: "Leistungsförderung (Helmke 1988)", pts: 4,
+        prompt: "Welche Unterrichtsmerkmale tragen empirisch belegt zur Leistungsförderung bei?",
+        type: "matrix", cols: ["Fördert Leistung (Ja)", "Fördert Leistung nicht (Nein)"],
+        rows: [
+          { id: "um1", l: "Die Unterrichtszeit wird intensiv zum Wissenserwerb genutzt.", c: "Fördert Leistung (Ja)" },
+          { id: "um2", l: "Aufgaben werden didaktisch klar und strukturiert gestellt.", c: "Fördert Leistung (Ja)" },
+          { id: "um3", l: "Die Lernwege der Schüler werden kaum überwacht.", c: "Fördert Leistung nicht (Nein)" },
+          { id: "um4", l: "Unterrichtsstörungen führen zu langen Diskussionen.", c: "Fördert Leistung nicht (Nein)" }
+        ],
+        hint: "Time on task & Klarheit fördern; mangelndes Monitoring & Diskussionen stören.",
+        exp: "Intensive Zeitnutzung und Klarheit fördern Lernerfolg; mangelnde Überwachung und Störungsdebatten schaden."
+      },
+      {
+        id: "uq9", cat: "Unterricht", topic: "Modell des Lehrerhandelns (Hofer)", pts: 5,
+        prompt: "Welche Komponenten gehören nach Hofer zum Modell des Lehrerhandelns?",
+        type: "matrix", cols: ["Bestandteil von Hofers Modell", "Kein Bestandteil"],
+        rows: [
+          { id: "hm1", l: "Kausalattribution von Schülerverhalten", c: "Bestandteil von Hofers Modell" },
+          { id: "hm2", l: "Handlungs-Ergebnis-Erwartung der Lehrkraft", c: "Bestandteil von Hofers Modell" },
+          { id: "hm3", l: "Wird-Soll-Vergleich (Antizipation künftiger Zustände)", c: "Bestandteil von Hofers Modell" },
+          { id: "hm4", l: "Handlung-Aufwand-Erwartung", c: "Kein Bestandteil" },
+          { id: "hm5", l: "Bedeutungsbeimessung der Unterrichtssituation", c: "Bestandteil von Hofers Modell" }
+        ],
+        hint: "Attribution, Erwartungen, Soll-Vergleiche und Bedeutungsbeimessung gehören dazu.",
+        exp: "Hofer integriert Attribution, Erwartungen und Soll-Vergleiche. 'Handlung-Aufwand-Erwartung' existiert nicht."
+      },
+      {
+        id: "uq10", cat: "Unterricht", topic: "Klassenführung (Kounin)", pts: 4,
+        prompt: "Welche Dimensionen erfolgreicher Klassenführung stammen von Jacob Kounin?",
+        sub: ["(1) Allgegenwärtigkeit (Withitness) und Überlappung (Overlapping)", "(2) Reibungslosigkeit (Smoothness) und Schwung (Momentum)", "(3) Gruppenmobilisierung und Aufrechterhaltung des Gruppenfokus", "(4) Härte und physische Strenge bei Bestrafungen"],
+        type: "single",
+        options: [{ k: "a", t: "Die Dimensionen (1), (2) und (3) gehören dazu; Dimension (4) nicht." }, { k: "b", t: "Nur Dimension (1) gehört dazu." }, { k: "c", t: "Alle Dimensionen (1) bis (4) gehören dazu." }, { k: "d", t: "Nur Dimensionen (2) und (4) gehören dazu." }],
+        correct: "a",
+        hint: "Withitness, Overlapping, Smoothness und Gruppenfokus sichern Disziplin, nicht Strafhärte.",
+        exp: "Richtig ist (1), (2) und (3): Kounin wies nach, dass proaktive Steuerung Störungen verhindert, nicht Strafhärte."
+      },
+      {
+        id: "uq11", cat: "Unterricht", topic: "Basisdimensionen (Klieme)", pts: 4,
+        prompt: "Welche drei Basisdimensionen von Unterrichtsqualität unterscheidet die Bildungsforschung?",
+        type: "single",
+        options: [
+          { k: "a", t: "Klassenführung, konstruktive Unterstützung und kognitive Aktivierung." },
+          { k: "b", t: "Frontalunterricht, Gruppenarbeit und Einzelarbeit." },
+          { k: "c", t: "Klausuren, Notenvergabe und Disziplinarmaßnahmen." },
+          { k: "d", t: "Lehrplan, Stundentafel und Raumausstattung." }
+        ],
+        correct: "a",
+        hint: "Klieme-Trias: Classroom Management, Student Support, Cognitive Activation.",
+        exp: "Richtig ist (a): Die drei Basisdimensionen nach Klieme bilden das Standardmodell deutscher Unterrichtsforschung."
+      },
+      {
+        id: "uq12", cat: "Unterricht", topic: "Selbstreguliertes Lernen (Zimmermann)", pts: 4,
+        prompt: "Welche drei Phasen durchläuft der SRL-Prozess nach Barry Zimmermann?",
+        type: "single",
+        options: [
+          { k: "a", t: "Handlungsplanung (Vorausdenken) -> Handlungsdurchführung (Monitoring) -> Selbstreflexion." },
+          { k: "b", t: "Abschreiben -> Auswendiglernen -> Vergessen." },
+          { k: "c", t: "Konditionieren -> Verstärken -> Löschen." },
+          { k: "d", t: "Diagnostizieren -> Sanktionieren -> Zensieren." }
+        ],
+        correct: "a",
+        hint: "Forethought (Planung), Performance (Monitoring), Self-Reflection (Reflexion).",
+        exp: "Richtig ist (a): SRL ist ein zyklischer Prozess aus Planung, Überwachung und Selbstreflexion."
+      },
+
+      /* --- 5. FEEDBACK & INTERAKTION (12 Aufgaben) --- */
+      {
+        id: "in1", cat: "Interaktion", topic: "ITFL-Feedbackmodell", pts: 4,
+        prompt: "Frau Müller nutzt Software: Bei Tippfehlern wird das Feld rot; am Ende heißt es: 'Super, Sprachgenie!'. Warum ist dies nach ITFL mangelhaft?",
+        sub: ["(1) Unmittelbares Signalfeedback verhindert die Generierung internen Feedbacks.", "(2) Summatives Feedback lobt ein stabiles Merkmal ('Genie') statt Anstrengung.", "(3) Es regt zu unreflektiertem Trial-and-Error-Raten an.", "(4) Es liefert informative Hinweise zur Rechtschreibregel."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) begründen die Mängel; Aussage (4) trifft nicht zu." }, { k: "b", t: "Nur die Aussagen (1) und (2) treffen zu." }, { k: "c", t: "Nur Aussage (2) trifft zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "ITFL: Feedback muss Raum für internes Feedback lassen und sich auf veränderbare Stellgrößen beziehen.",
+        exp: "Richtig ist (1), (2) und (3). Signalfeedback erstickt Fehlermonitoring und lobt toxisch Begabung."
+      },
+      {
+        id: "in2", cat: "Interaktion", topic: "ITFL: Komponenten-Zuordnung", pts: 5,
+        prompt: "Ordnen Sie die Komponenten des ITFL-Modells zu:",
+        type: "matrix", cols: ["Lernende Person", "Lehrende Person", "Beide"],
+        rows: [
+          { id: "itfl1", l: "Informationsverarbeitungs- und Regulationsstrategien", c: "Lernende Person" },
+          { id: "itfl2", l: "Curriculare Lehr-Lernziele und Kompetenzraster", c: "Lehrende Person" },
+          { id: "itfl3", l: "Repräsentation von Standards und Soll-Werten", c: "Beide" },
+          { id: "itfl4", l: "Regeleinrichtung (Vergleich von Soll- und Ist-Werten)", c: "Beide" },
+          { id: "itfl5", l: "Stellglied (z.B. Korrigieren, Anstrengung steigern)", c: "Lernende Person" }
+        ],
+        hint: "Doppelter Regelkreis: Soll-Werte & Regeleinrichtungen existieren intern und extern. Stellglieder bedient der Lerner.",
+        exp: "Strategien/Stellglieder = Lerner; Lehrziele = Lehrende; Soll-Werte & Regeleinrichtungen = Beide."
+      },
+      {
+        id: "in3", cat: "Interaktion", topic: "Golem-Effekt (Rosenthal)", pts: 4,
+        prompt: "Welche Verhaltensweisen zeigen Lehrpersonen bei NIEDRIGEN Leistungserwartungen?",
+        sub: ["(1) Kürzere Wartezeiten bei Fragen einräumen", "(2) Die Schüler im Unterricht seltener aufrufen", "(3) Paradoxes Lob für extrem einfache Aufgaben aussprechen", "(4) Häufiger wohlwollenden Blickkontakt zeigen"],
+        type: "single",
+        options: [{ k: "a", t: "Die Verhaltensweisen (1), (2) und (3) treffen zu; Verhaltensweise (4) nicht." }, { k: "b", t: "Die Verhaltensweisen (2) und (4) treffen zu." }, { k: "c", t: "Nur Verhaltensweise (1) trifft zu." }, { k: "d", t: "Alle Verhaltensweisen treffen zu." }],
+        correct: "a",
+        hint: "Kürzere Wartezeit, weniger Aufrufe und herablassendes Lob für Minimalleistungen signalisieren geringe Erwartung.",
+        exp: "Richtig ist (1), (2) und (3). Zuwendung erhalten positiv erwartete Schüler."
+      },
+      {
+        id: "in4", cat: "Interaktion", topic: "Paradoxe Effekte von Lob/Tadel", pts: 4,
+        prompt: "Wann tritt ein PARADOXER Effekt von Lob bzw. Tadel nach Meyer auf?",
+        sub: ["(1) Lob für extrem leichte Aufgaben signalisiert geringe Fähigkeiten.", "(2) Tadel bei Scheitern an schwerer Aufgabe signalisiert hohe Fähigkeiten.", "(3) Paradoxes Lob stärkt das Vertrauen in Hochbegabung.", "(4) Paradoxer Tadel senkt das Selbstkonzept immer."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1) und (2) treffen zu; die Aussagen (3) und (4) treffen nicht zu." }, { k: "b", t: "Nur Aussage (1) trifft zu." }, { k: "c", t: "Die Aussagen (1) und (4) treffen zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "Lob für Pillepalle kommuniziert: 'Mehr kannst du nicht'. Tadel bei schwerer Aufgabe: 'Du hättest das gekonnt!'.",
+        exp: "Richtig ist (1) und (2): Rückmeldungen kommunizieren indirekt die Fähigkeitseinschätzung der Lehrkraft."
+      },
+      {
+        id: "in5", cat: "Interaktion", topic: "Bezugsnormorientierung", pts: 5,
+        prompt: "Ordnen Sie die Lehreraussagen der individuellen oder sozialen Bezugsnorm zu:",
+        type: "matrix", cols: ["Individuelle Bezugsnorm", "Soziale Bezugsnorm"],
+        rows: [
+          { id: "bn1", l: "'Ich warte mit Noten, bis alle fertig sind, um den Schnitt zu sehen.'", c: "Soziale Bezugsnorm" },
+          { id: "bn2", l: "'Pia, klasse wie du dich im Vergleich zum Halbjahr gesteigert hast!'", c: "Individuelle Bezugsnorm" },
+          { id: "bn3", l: "Lehrkraft sortiert Arbeiten vor der Korrektur nach der bisherigen Rangreihe.", c: "Soziale Bezugsnorm" },
+          { id: "bn4", l: "'Timo, im Vergleich zu früheren Arbeiten hast du einen Sprung gemacht!'", c: "Individuelle Bezugsnorm" },
+          { id: "bn5", l: "'Du bist in dieser Klassenarbeit der Zweitbeste der Stufe.'", c: "Soziale Bezugsnorm" }
+        ],
+        hint: "Individuell = Lernzuwachs über die Zeit. Sozial = Rangreihe/Schnitt.",
+        exp: "Schnitt, Rangreihe und Klassenrang = Sozial. Individueller Lernzuwachs = Individuell."
+      },
+      {
+        id: "in6", cat: "Interaktion", topic: "Glockenkurven-Benotung", pts: 4,
+        caseStudy: "Ein Physiklehrer passt den Notenschlüssel so an, dass der Schnitt Note 3 ergibt, der Beste eine 1 und der Schlechteste eine 6 erhält.",
+        prompt: "Welche Fehler begeht der Lehrer?",
+        sub: ["(1) Er wendet eine reine soziale Bezugsnorm an und verletzt Interpretationsobjektivität.", "(2) Das Vorgehen zerstört die Handlungs-Ergebnis-Erwartung der Schüler.", "(3) Schulordnungen fordern vorrangig kriteriale Maßstäbe.", "(4) Das Vorgehen garantiert optimale formative Förderung."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) ist falsch." }, { k: "b", t: "Nur Aussagen (1) und (2) treffen zu." }, { k: "c", t: "Nur Aussage (3) trifft zu." }, { k: "d", t: "Alle Aussagen treffen zu." }],
+        correct: "a",
+        hint: "Normalverteilungs-Zwang verletzt Objektivität und entkoppelt Anstrengung und Zensur (H-E bricht ein).",
+        exp: "Richtig ist (1), (2) und (3). Es verletzt Bildungsstandards, zerstört Objektivität und demotiviert Schüler."
+      },
+      {
+        id: "in7", cat: "Interaktion", topic: "Interaktionsarten (Jones & Gerard)", pts: 4,
+        prompt: "Ordnen Sie die Szenarien den Interaktionsarten zu:",
+        type: "matrix", cols: ["Pseudoint.", "Asymmetrisch", "Wechselseitig", "Reaktiv"],
+        rows: [
+          { id: "ia1", l: "Lehrer referiert stur; Schüler lernen heimlich Englisch.", c: "Pseudoint." },
+          { id: "ia2", l: "Lehrerin stellt Wissensfragen nach IRF-Muster (Frage -> Antwort -> Urteil).", c: "Asymmetrisch" },
+          { id: "ia3", l: "Schüler und Lehrer entwickeln gemeinsam im Dialog Ideen für ein Theaterstück.", c: "Wechselseitig" },
+          { id: "ia4", l: "Lehrer und Schüler grüßen sich im Vorbeigehen flüchtig.", c: "Reaktiv" }
+        ],
+        hint: "Monolog = Pseudoint.; IRF-Abfrage = Asymmetrisch; Gemeinsames Planen = Wechselseitig; Gruß = Reaktiv.",
+        exp: "Monolog = Pseudoint.; IRF-Abfrage = Asymmetrisch; Kooperation = Wechselseitig; Gruß = Reaktiv."
+      },
+      {
+        id: "in8", cat: "Interaktion", topic: "Vier-Seiten-Modell (Schulz von Thun)", pts: 4,
+        caseStudy: "Die Lehrerin sagt genervt: 'Jan, dein Taschenrechner liegt immer noch im Ranzen!'",
+        prompt: "Welche Botschaft transportiert die Aussage nach Schulz von Thun?",
+        sub: ["(1) Sachebene: Der Rechner liegt physisch im Ranzen.", "(2) Selbstoffenbarung: Die Lehrerin ist ungeduldig.", "(3) Beziehungsebene: Jan wird als unaufmerksam/unorganisiert definiert.", "(4) Appellebene: Jan soll den Rechner herausholen."],
+        type: "single",
+        options: [{ k: "a", t: "Alle vier Aussagen (1) bis (4) treffen exakt zu." }, { k: "b", t: "Nur Sach- und Appellebene treffen zu." }, { k: "c", t: "Nur Selbstoffenbarung und Beziehungsebene treffen zu." }, { k: "d", t: "Aussage (3) ist falsch." }],
+        correct: "a",
+        hint: "Sache, Selbstoffenbarung, Beziehung und Appell sind simultan enthalten.",
+        exp: "Richtig ist (a): Alle vier Aussagen beschreiben die vier Seiten der Botschaft treffend."
+      },
+      {
+        id: "in9", cat: "Interaktion", topic: "Zielorientierungen (Ames & Archer)", pts: 4,
+        prompt: "Welche Merkmale kennzeichnen Lernende mit Mastery Goals?",
+        sub: ["(1) Fokus auf individuellen Kompetenzzuwachs und echtes Verständnis", "(2) Fehler werden als konstruktive Lernchancen begriffen", "(3) Wahl von herausfordernden Aufgaben mittlerer bis hoher Schwierigkeit", "(4) Hauptziel ist es, andere Mitschüler zu übertreffen"],
+        type: "single",
+        options: [{ k: "a", t: "Die Merkmale (1), (2) und (3) treffen zu; Merkmal (4) nicht." }, { k: "b", t: "Nur die Merkmale (1) und (2) treffen zu." }, { k: "c", t: "Die Merkmale (1) und (4) treffen zu." }, { k: "d", t: "Alle Merkmale treffen zu." }],
+        correct: "a",
+        hint: "Mastery = Kompetenzerwerb, Fehlertoleranz. Performance = Übertreffen anderer.",
+        exp: "Richtig ist (1), (2) und (3). Andere übertreffen zu wollen (4) ist typisch für Performance Goals."
+      },
+      {
+        id: "in10", cat: "Interaktion", topic: "Lehrerfeedback nach Klausur", pts: 4,
+        caseStudy: "Nach schlechter Klausur schimpft der Lehrer: 'Ich bin so enttäuscht! So schwer waren die Aufgaben doch gar nicht!'",
+        prompt: "Welche Formulierungen wären motivationsförderlicher gewesen?",
+        sub: ["(1) 'Mir fiel auf, dass Gegebenes und Gesuchtes nicht getrennt wurden. Daran arbeiten wir.'", "(2) 'Was meint ihr, woran es lag? Lasst uns die typischen Fehlstellen analysieren.'", "(3) 'Nehmt euch gefälligst ein Beispiel an den Klassenbesten!'", "(4) 'Physik scheint euch einfach nicht im Blut zu liegen.'"],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1) und (2) sind motivationsförderlich; (3) und (4) sind schädlich." }, { k: "b", t: "Nur Aussage (1) ist motivationsförderlich." }, { k: "c", t: "Die Aussagen (1) und (3) sind förderlich." }, { k: "d", t: "Alle Aussagen sind förderlich." }],
+        correct: "a",
+        hint: "Konstruktiv = Strategiehinweise & partnerschaftliche Analyse. Abwertungsvergleiche schaden.",
+        exp: "Richtig ist (1) und (2): Konstruktive Strategiehinweise und Fehleranalyse fördern Kompetenz."
+      },
+      {
+        id: "in11", cat: "Interaktion", topic: "Ungefragte Hilfe & Mitleid", pts: 4,
+        prompt: "Welche Wirkung hat demonstratives Mitleid der Lehrkraft bei Misserfolg nach Graham?",
+        type: "single",
+        options: [
+          { k: "a", t: "Es wirkt als indirekte Attribution auf mangelnde Fähigkeit und senkt das Selbstkonzept." },
+          { k: "b", t: "Es spornt den Schüler zu Höchstleistungen an." },
+          { k: "c", t: "Es führt unmittelbar zur Steigerung der intrinsischen Motivation." },
+          { k: "d", t: "Es hat keinerlei psychologische Wirkung." }
+        ],
+        correct: "a",
+        hint: "Mitleid signalisiert dem Schüler: 'Du kannst es einfach nicht' (unkontrollierbare Ursache).",
+        exp: "Richtig ist (a): Mitleid kommuniziert indirekt mangelnde Begabung und erzeugt Scham und Hilflosigkeit."
+      },
+      {
+        id: "in12", cat: "Interaktion", topic: "Kommunikationssperren (Gordon)", pts: 4,
+        prompt: "Welche Verhaltensweise stellt nach Gordon eine typische 'Kommunikationssperre' dar?",
+        type: "single",
+        options: [
+          { k: "a", t: "Moralisieren und Predigen ('Als ordentlicher Schüler musst du wissen, was sich gehört!')." },
+          { k: "b", t: "Aktives Zuhören und Paraphrasieren der Schüleraussage." },
+          { k: "c", t: "Senden von Ich-Botschaften zur Klärung der Befindlichkeit." },
+          { k: "d", t: "Gemeinsames Aushandeln von Klassenregeln." }
+        ],
+        correct: "a",
+        hint: "Moralisieren, Befehlen und Kritisieren blockieren offene Kommunikation.",
+        exp: "Richtig ist (a): Moralisieren und Predigen blockiert das Gespräch und löst Trotz aus."
+      },
+
+      /* --- 6. DIAGNOSTIK & ENTWICKLUNG (12 Aufgaben) --- */
+      {
+        id: "de1", cat: "Diagnostik & Entwicklung", topic: "Diagnoseebenen (Zielinski)", pts: 5,
+        caseStudy: "Juliane hat erhebliche Schwierigkeiten beim Lesen und Schreiben zusammengesetzter Wörter. Die Lehrerin ergreift Maßnahmen.",
+        prompt: "Ordnen Sie die Maßnahmen den Diagnoseebenen zu:",
+        type: "matrix", cols: ["Vorkenntnisdiagnose", "Fähigkeitsdiagnose", "Verhaltensdiagnose", "Unterrichtsdiagnose"],
+        rows: [
+          { id: "zd1", l: "Sie überprüft mit Tests die Basiskompetenz der Laut-Buchstaben-Zuordnung.", c: "Fähigkeitsdiagnose" },
+          { id: "zd2", l: "Sie beobachtet im Unterricht gezielt, wie schnell sich Juliane ablenken lässt.", c: "Verhaltensdiagnose" },
+          { id: "zd3", l: "Sie filmt ihren Unterricht, um zu prüfen, ob sie Juliane genug Zeit einräumt.", c: "Unterrichtsdiagnose" },
+          { id: "zd4", l: "Sie kontrolliert, ob Juliane die grundlegenden Regeln der Vorwoche beherrscht.", c: "Vorkenntnisdiagnose" },
+          { id: "zd5", l: "Sie erfasst, ob Juliane während der Arbeitsphase aktiv liest oder den Stift dreht.", c: "Verhaltensdiagnose" }
+        ],
+        hint: "Basiskompetenz = Fähigkeit; Ablenkbarkeit = Verhalten; Lehrerzeit = Unterricht; Vorwoche = Vorkenntnis.",
+        exp: "Basiskompetenz = Fähigkeit; Ablenkbarkeit = Verhalten; Zeit der Lehrkraft = Unterricht; Stoff der Vorwoche = Vorkenntnis."
+      },
+      {
+        id: "de2", cat: "Diagnostik & Entwicklung", topic: "Testgütekriterien", pts: 4,
+        prompt: "Welche Aussagen zu den Hauptgütekriterien treffen zu?",
+        sub: ["(1) Objektivität: Testergebnis unabhängig vom Testleiter.", "(2) Reliabilität: formale Messgenauigkeit und Zuverlässigkeit.", "(3) Validität: Test misst tatsächlich das Merkmal, das er messen soll.", "(4) Ein Test kann valide sein, ohne objektiv und reliabel zu sein."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) ist falsch." }, { k: "b", t: "Nur die Aussagen (2) und (3) treffen zu." }, { k: "c", t: "Alle Aussagen treffen zu." }, { k: "d", t: "Nur Aussage (3) trifft zu." }],
+        correct: "a",
+        hint: "Hierarchie: Objektivität -> Reliabilität -> Validität. Ohne Reliabilität keine Validität.",
+        exp: "Richtig ist (1), (2) und (3). Aussage (4) ist falsch, da Validität Reliabilität und Objektivität voraussetzt."
+      },
+      {
+        id: "de3", cat: "Diagnostik & Entwicklung", topic: "Kognitive Entwicklung (Piaget)", pts: 4,
+        prompt: "In welchem Stadium erwirbt ein Kind typischerweise das Invarianzkonzept (Mengenerhaltung)?",
+        type: "single",
+        options: [
+          { k: "a", t: "Sensomotorische Phase (0–2 Jahre)" },
+          { k: "b", t: "Präoperationale Phase (2–7 Jahre)" },
+          { k: "c", t: "Konkret-operationale Phase (7–11 Jahre)" },
+          { k: "d", t: "Formal-operationale Phase (ab 12 Jahren)" }
+        ],
+        correct: "c",
+        hint: "Mengenerhaltung (Invarianz trotz Transformation) kennzeichnet das konkret-operationale Stadium.",
+        exp: "Richtig ist (c): Das Verständnis von Invarianz bildet sich im konkret-operationalen Stadium (ca. 7–11 Jahre) heraus."
+      },
+      {
+        id: "de4", cat: "Diagnostik & Entwicklung", topic: "Bindungstheorie (Ainsworth)", pts: 4,
+        prompt: "Ein Kleinkind meidet bei Rückkehr der Mutter den Blickkontakt und spielt unbeeindruckt weiter, weist aber hohen Stress auf. Welcher Bindungstyp liegt vor?",
+        type: "single",
+        options: [
+          { k: "a", t: "Sichere Bindung (Typ B)" },
+          { k: "b", t: "Unsicher-vermeidende Bindung (Typ A)" },
+          { k: "c", t: "Unsicher-ambivalente Bindung (Typ C)" },
+          { k: "d", t: "Desorganisierte Bindung (Typ D)" }
+        ],
+        correct: "b",
+        hint: "Typ A = unsicher-vermeidend (Pseudo-Unabhängigkeit bei internem Stress).",
+        exp: "Richtig ist (b): Scheinbare Gleichgültigkeit bei Wiederkehr trotz internem Stress kennzeichnet Typ A."
+      },
+      {
+        id: "de5", cat: "Diagnostik & Entwicklung", topic: "Lernschwierigkeiten (ICD-10 F81)", pts: 4,
+        prompt: "Was charakterisiert eine umschriebene Entwicklungsstörung schulischer Fertigkeiten nach F81?",
+        sub: ["(1) Die Minderleistung ist nicht allein durch Intelligenzminderung erklärbar (Diskrepanzkriterium).", "(2) Die Störung ist nicht allein auf unzureichende Beschulung oder Seh-/Hörstörungen zurückzuführen.", "(3) Die Störung liegt von frühen Entwicklungsabschnitten an vor.", "(4) Bei jeder Dyskalkulie liegt automatisch auch eine Lesestörung vor."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) treffen zu; Aussage (4) nicht." }, { k: "b", t: "Nur die Aussagen (1) und (2) treffen zu." }, { k: "c", t: "Alle Aussagen treffen zu." }, { k: "d", t: "Nur Aussage (1) trifft zu." }],
+        correct: "a",
+        hint: "Ausschlusskriterien: normale Intelligenz, adäquate Beschulung. Störungen treten häufig isoliert auf.",
+        exp: "Richtig ist (1), (2) und (3). Aussage (4) ist falsch, da Rechenstörungen häufig isoliert vorkommen."
+      },
+      {
+        id: "de6", cat: "Diagnostik & Entwicklung", topic: "Kulturspezifika der Entwicklung", pts: 4,
+        prompt: "Welche Entwicklungsphänomene sind empirisch belegt kulturspezifisch?",
+        sub: ["(1) Verteilungsmuster von Bindungstypen variieren zwischen Ländern.", "(2) Kulturelle Unterschiede in den Darbietungsregeln (Display Rules) für Emotionen.", "(3) Ausmaß des Autonomiebestrebens von Jugendlichen gegenüber Eltern.", "(4) Die neurobiologische Existenz von Grundemotionen (Freude, Angst)."],
+        type: "single",
+        options: [{ k: "a", t: "Die Aussagen (1), (2) und (3) beschreiben Kulturspezifika; Aussage (4) ist universell." }, { k: "b", t: "Nur die Aussagen (2) und (3) treffen zu." }, { k: "c", t: "Alle 4 Aussagen sind Kulturspezifika." }, { k: "d", t: "Nur Aussage (1) trifft zu." }],
+        correct: "a",
+        hint: "Grundemotionen sind biologisch universell. Darbietungsregeln und Bindungsverteilungen sind kulturspezifisch.",
+        exp: "Richtig ist (1), (2) und (3). Die neurobiologische Verankerung von Grundemotionen ist universell."
+      },
+      {
+        id: "de7", cat: "Diagnostik & Entwicklung", topic: "Untersuchungsdesigns", pts: 4,
+        caseStudy: "Ein Forscher befragt Schüler der 1., 2. und 3. Klasse im Jahr 2016 und untersucht dieselben Kohorten erneut im Jahr 2018.",
+        prompt: "Welches Design liegt vor?",
+        type: "single",
+        options: [
+          { k: "a", t: "Kohorten-Sequenz-Design (Kombination aus Längsschnitt- und Querschnittdesign)" },
+          { k: "b", t: "Reines experimentelles Labor-Design" },
+          { k: "c", t: "Reines Querschnittdesign" },
+          { k: "d", t: "Retrospektive Einzelfallstudie" }
+        ],
+        correct: "a",
+        hint: "Mehrere Altersgruppen (Querschnitt) über die Zeit wiederholt gemessen (Längsschnitt) = Sequenzdesign.",
+        exp: "Richtig ist (a): Die Kombination trennt Alters- von Kohorteneffekten."
+      },
+      {
+        id: "de8", cat: "Diagnostik & Entwicklung", topic: "Formativ vs. Summativ", pts: 4,
+        prompt: "Welcher Unterschied zwischen formativer und summativer Beurteilung ist korrekt?",
+        type: "single",
+        options: [
+          { k: "a", t: "Formatives Assessment begleitet den Lernprozess zur Förderung; summatives Assessment bilanziert abschließend (Zeugnisnote)." },
+          { k: "b", t: "Summatives Assessment dient ausschließlich der intrinsischen Motivationssteigerung." },
+          { k: "c", t: "Formatives Assessment darf niemals Rückmeldungen enthalten." },
+          { k: "d", t: "Beide Formen sind identisch mit standardisierten Intelligenztests." }
+        ],
+        correct: "a",
+        hint: "Formativ = prozessbegleitend optimierend; Summativ = abschließend bilanzierend.",
+        exp: "Formativ optimiert das laufende Lernen; summativ zieht den Schlussstrich für Zeugnisse."
+      },
+      {
+        id: "de9", cat: "Diagnostik & Entwicklung", topic: "Assimilation & Akkommodation", pts: 4,
+        prompt: "Wie unterscheidet Jean Piaget die Prozesse der Äquilibration?",
+        type: "single",
+        options: [
+          { k: "a", t: "Assimilation = Einfügen in bestehende Schemata; Akkommodation = Modifikation bestehender Schemata an Umweltinformationen." },
+          { k: "b", t: "Assimilation = Vergessen alter Schemata; Akkommodation = Speicherung im Speicher." },
+          { k: "c", t: "Beide Begriffe bezeichnen den biologischen Reifungsprozess des Gehirns." },
+          { k: "d", t: "Akkommodation findet nur im ersten Lebensjahr statt." }
+        ],
+        correct: "a",
+        hint: "Assimilation passt Information an Schema an; Akkommodation verändert das Schema bei Widerspruch.",
+        exp: "Richtig ist (a): Assimilation integriert in bestehende Schemata; Akkommodation passt Schemata adaptiv an."
+      },
+      {
+        id: "de10", cat: "Diagnostik & Entwicklung", topic: "Zone der nächsten Entwicklung (Wygotski)", pts: 4,
+        prompt: "Was versteht Lew Wygotski unter der 'Zone der nächsten Entwicklung'?",
+        type: "single",
+        options: [
+          { k: "a", t: "Die Distanz zwischen dem aktuellen Niveau (was man alleine kann) und dem Niveau unter kompetenter Anleitung (Scaffolding)." },
+          { k: "b", t: "Die Phase vor der Einschulung." },
+          { k: "c", t: "Der Bereich des Gehirns für Sprachverständnis." },
+          { k: "d", t: "Die biologische Reifungsgrenze, die durch Unterricht nicht verändert werden kann." }
+        ],
+        correct: "a",
+        hint: "Was das Kind heute mit Scaffolding schafft, kann es morgen selbstständig.",
+        exp: "Richtig ist (a): Die ZPD definiert das Lernpotenzial, das durch Unterstützung aktiviert werden kann."
+      },
+      {
+        id: "de11", cat: "Diagnostik & Entwicklung", topic: "Ökologische Systemtheorie", pts: 4,
+        prompt: "Ordnen Sie die Ebenen nach Bronfenbrenner den Beispielen zu:",
+        type: "matrix", cols: ["Mikrosystem", "Mesosystem", "Exosystem", "Makrosystem"],
+        rows: [
+          { id: "ob1", l: "Direkte Interaktion des Schülers mit seinen Eltern am Esstisch", c: "Mikrosystem" },
+          { id: "ob2", l: "Zusammenarbeit und Elterngespräche zwischen Lehrkraft und Eltern", c: "Mesosystem" },
+          { id: "ob3", l: "Arbeitsplatzbedingungen der Eltern (z.B. Schichtarbeit)", c: "Exosystem" },
+          { id: "ob4", l: "Kulturelle Werte, Bildungspolitik und gesellschaftliche Schulgesetze", c: "Makrosystem" }
+        ],
+        hint: "Mikro = Lebensbereich; Meso = Verknüpfung zweier Bereiche; Exo = betrifft Eltern, wirkt auf Kind; Makro = Kultur/Gesetze.",
+        exp: "Familie = Mikrosystem; Eltern-Lehrer = Mesosystem; Arbeitsplatz der Eltern = Exosystem; Gesetze = Makrosystem."
+      },
+      {
+        id: "de12", cat: "Diagnostik & Entwicklung", topic: "Identitätsstadien (Marcia)", pts: 4,
+        prompt: "Ein Jugendlicher hat sich nach Exploration verschiedener Optionen bewusst für einen Beruf entschieden. Welches Stadium liegt vor?",
+        type: "single",
+        options: [
+          { k: "a", t: "Erarbeitete Identität (Identity Achievement)" },
+          { k: "b", t: "Moratorium (Krise ohne Festlegung)" },
+          { k: "c", t: "Übernommene Identität (Festlegung ohne Krise)" },
+          { k: "d", t: "Diffuse Identität" }
+        ],
+        correct: "a",
+        hint: "Krise durchlebt + feste Verpflichtung eingegangen = Erarbeitete Identität.",
+        exp: "Richtig ist (a): Erfolgte Exploration gepaart mit fester Verpflichtung definiert die erarbeitete Identität."
+      }
+    ];
+
+    /* SHUFFLE UTILITIES (FISHER-YATES) */
+    function shuffleArray(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function prepareQuestionInstance(origQ) {
+      const q = JSON.parse(JSON.stringify(origQ));
+      const letters = ["a", "b", "c", "d", "e", "f"];
+
+      if (q.type === "single" && q.options) {
+        const marked = q.options.map(opt => ({
+          text: opt.t,
+          isCorrect: opt.k === origQ.correct
+        }));
+        const shuffled = shuffleArray(marked);
+        q.options = shuffled.map((opt, idx) => ({
+          k: letters[idx],
+          t: opt.text,
+          isCorrect: opt.isCorrect
+        }));
+        q.correct = q.options.find(o => o.isCorrect).k;
+      } else if (q.type === "matrix" && q.rows) {
+        q.rows = shuffleArray(q.rows);
+      }
+      return q;
+    }
+
+    let currentMode = "exam";
+    let currentQuestions = [];
+    let userAnswers = {};
+    let activeFilter = "all";
+
+    function init() {
+      loadAnswers();
+      setMode("exam");
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById("seg-exam").classList.toggle("active", mode === "exam");
+      document.getElementById("seg-train").classList.toggle("active", mode === "training");
+      
+      const filterBar = document.getElementById("filter-container");
+      const btnSubmitHead = document.getElementById("btn-submit-head");
+      const btnSubmitFoot = document.getElementById("btn-submit-foot");
+
+      if (mode === "exam") {
+        filterBar.style.display = "none";
+        btnSubmitHead.style.display = "inline-block";
+        btnSubmitFoot.style.display = "inline-block";
+        setupExamMode();
+      } else {
+        filterBar.style.display = "flex";
+        btnSubmitHead.style.display = "none";
+        btnSubmitFoot.style.display = "none";
+        setupTrainingMode();
+      }
+    }
+
+    function setupExamMode() {
+      document.getElementById("results-panel").classList.remove("visible");
+      const categories = ["Lernpsychologie", "Kognition", "Motivation", "Unterricht", "Interaktion", "Diagnostik & Entwicklung"];
+      const quota = { "Lernpsychologie": 4, "Kognition": 3, "Motivation": 4, "Unterricht": 3, "Interaktion": 3, "Diagnostik & Entwicklung": 3 };
+
+      let selected = [];
+      categories.forEach(cat => {
+        const pool = questionBank.filter(q => q.cat === cat);
+        const shuffledPool = shuffleArray(pool);
+        const count = quota[cat] || 3;
+        selected = selected.concat(shuffledPool.slice(0, count));
+      });
+
+      const finalSeq = shuffleArray(selected);
+      currentQuestions = finalSeq.map(q => prepareQuestionInstance(q));
+      render();
+      updateStatus();
+    }
+
+    function startNewExam() {
+      if (confirm(currentMode === "exam" ? "Neue Klausur (20 zufällige Aufgaben) starten?" : "Trainingsfragen neu mischen?")) {
+        userAnswers = {};
+        persist();
+        if (currentMode === "exam") setupExamMode();
+        else setupTrainingMode();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+    }
+
+    function setupTrainingMode() {
+      document.getElementById("results-panel").classList.remove("visible");
+      const shuffledAll = shuffleArray(questionBank);
+      currentQuestions = shuffledAll.map(q => prepareQuestionInstance(q));
+      render();
+      updateStatus();
+    }
+
+    function render() {
+      const container = document.getElementById("q-container");
+      container.innerHTML = "";
+
+      currentQuestions.forEach((q, idx) => {
+        if (currentMode === "training" && activeFilter !== "all" && q.cat !== activeFilter) {
+          return;
+        }
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = `card-${q.id}`;
+
+        let caseHtml = q.caseStudy ? `<div class="case-box"><strong>Fall:</strong> ${q.caseStudy.replace(/\n/g, '<br>')}</div>` : "";
+        let subHtml = q.sub ? `<ul class="sub-list">${q.sub.map(s => `<li>${s}</li>`).join("")}</ul>` : "";
+        let bodyHtml = "";
+
+        if (q.type === "single") {
+          bodyHtml = `<div class="options-group">
+            ${q.options.map(opt => {
+              const isChecked = userAnswers[q.id] === opt.k;
+              return `
+                <label class="opt-label ${isChecked ? 'checked' : ''}" id="lbl-${q.id}-${opt.k}">
+                  <input type="radio" name="${q.id}" value="${opt.k}" onchange="setSingleAns('${q.id}', '${opt.k}')" ${isChecked ? "checked" : ""}>
+                  <span><strong>(${opt.k})</strong>${opt.t}</span>
+                </label>
+              `;
+            }).join("")}
+          </div>`;
+        } else if (q.type === "matrix") {
+          bodyHtml = `
+            <div class="matrix-wrap">
+              <table class="matrix-table">
+                <thead><tr><th>Item / Sachverhalt</th>${q.cols.map(c => `<th class="center">${c}</th>`).join("")}</tr></thead>
+                <tbody>
+                  ${q.rows.map(r => {
+                    const saved = (userAnswers[q.id] && userAnswers[q.id][r.id]) || "";
+                    return `<tr id="row-${q.id}-${r.id}">
+                      <td>${r.l}</td>${q.cols.map(c => `
+                        <td class="center">
+                          <input type="radio" name="${q.id}_${r.id}" value="${c}" onchange="setMatrixAns('${q.id}', '${r.id}', '${c}')" ${saved === c ? "checked" : ""}>
+                        </td>
+                      `).join("")}
+                    </tr>`;
+                  }).join("")}
+                </tbody>
+              </table>
+            </div>
+          `;
+        }
+
+        let checkBtn = currentMode === "training" ? `<button class="btn-check" onclick="evalSingle('${q.id}')">Prüfen</button>` : "";
+
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="q-num">#${idx + 1} (${q.pts}P)</span>
+            <span class="q-topic">${q.cat}</span>
+          </div>
+          ${caseHtml}
+          <div class="q-prompt">${q.prompt}</div>
+          ${subHtml}
+          ${bodyHtml}
+          <div class="card-actions">
+            ${checkBtn}
+            <button class="btn-hint" onclick="toggleHint('${q.id}')">💡 Hinweis</button>
+          </div>
+          <div class="hint-box" id="hint-${q.id}">${q.hint}</div>
+          <div class="feedback-box" id="fb-${q.id}"></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function setSingleAns(qId, val) {
+      userAnswers[qId] = val;
+      persist();
+      updateStatus();
+      
+      const q = currentQuestions.find(x => x.id === qId);
+      if (q && q.options) {
+        q.options.forEach(o => {
+          const el = document.getElementById(`lbl-${qId}-${o.k}`);
+          if (el) el.classList.toggle("checked", o.k === val);
+        });
+      }
+    }
+
+    function setMatrixAns(qId, rId, val) {
+      if (!userAnswers[qId] || typeof userAnswers[qId] !== "object") userAnswers[qId] = {};
+      userAnswers[qId][rId] = val;
+      persist();
+      updateStatus();
+    }
+
+    function toggleHint(qId) {
+      document.getElementById(`hint-${qId}`).classList.toggle("open");
+    }
+
+    function setFilter(cat, el) {
+      activeFilter = cat;
+      document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+      el.classList.add("active");
+      render();
+    }
+
+    function updateStatus() {
+      let done = 0;
+      currentQuestions.forEach(q => {
+        if (q.type === "single" && userAnswers[q.id]) done++;
+        else if (q.type === "matrix" && userAnswers[q.id] && Object.keys(userAnswers[q.id]).length === q.rows.length) done++;
+      });
+      const total = currentQuestions.length;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      document.getElementById("p-bar").style.width = `${pct}%`;
+      document.getElementById("answered-badge").innerText = `${done}/${total}`;
+      document.getElementById("foot-status").innerText = `${done} von ${total} gelöst (${pct}%)`;
+    }
+
+    function evalSingle(qId) {
+      const q = currentQuestions.find(x => x.id === qId);
+      const fb = document.getElementById(`fb-${qId}`);
+      if (!fb || !q) return;
+
+      let isCorrect = false;
+      if (q.type === "single") {
+        const userChoice = userAnswers[qId];
+        isCorrect = userChoice === q.correct;
+        
+        q.options.forEach(opt => {
+          const lbl = document.getElementById(`lbl-${qId}-${opt.k}`);
+          if (lbl) {
+            lbl.classList.remove("correct", "incorrect");
+            if (opt.k === q.correct) lbl.classList.add("correct");
+            else if (opt.k === userChoice) lbl.classList.add("incorrect");
+          }
+        });
+      } else if (q.type === "matrix") {
+        const u = userAnswers[qId] || {};
+        let rowAllCorrect = true;
+        q.rows.forEach(r => {
+          const rowEl = document.getElementById(`row-${qId}-${r.id}`);
+          const isRowRight = u[r.id] === r.c;
+          if (rowEl) {
+            rowEl.classList.remove("row-correct", "row-incorrect");
+            rowEl.classList.add(isRowRight ? "row-correct" : "row-incorrect");
+          }
+          if (!isRowRight) rowAllCorrect = false;
+        });
+        isCorrect = rowAllCorrect;
+      }
+
+      fb.className = "feedback-box " + (isCorrect ? "correct" : "incorrect");
+      fb.innerHTML = `<strong>${isCorrect ? "✓ Richtig!" : "✗ Nicht ganz"}</strong><br>${q.exp}`;
+      fb.style.display = "block";
+    }
+
+    function gradeExam() {
+      let earned = 0, total = 0;
+      let catScores = {};
+
+      currentQuestions.forEach(q => {
+        total += q.pts;
+        if (!catScores[q.cat]) catScores[q.cat] = { e: 0, t: 0 };
+        catScores[q.cat].t += q.pts;
+
+        let qEarn = 0;
+        if (q.type === "single" && userAnswers[q.id] === q.correct) {
+          qEarn = q.pts;
+        } else if (q.type === "matrix") {
+          const u = userAnswers[q.id] || {};
+          let rowsRight = 0;
+          q.rows.forEach(r => { if (u[r.id] === r.c) rowsRight++; });
+          qEarn = Math.round((rowsRight / q.rows.length) * q.pts * 10) / 10;
+        }
+
+        earned += qEarn;
+        catScores[q.cat].e += qEarn;
+        evalSingle(q.id);
+      });
+
+      earned = Math.round(earned * 10) / 10;
+      const pct = total > 0 ? Math.round((earned / total) * 100) : 0;
+
+      let grade = "5.0", gClass = "grade-fail";
+      if (pct >= 90) { grade = "1.0"; gClass = "grade-pass"; }
+      else if (pct >= 80) { grade = "1.7"; gClass = "grade-pass"; }
+      else if (pct >= 70) { grade = "2.3"; gClass = "grade-pass"; }
+      else if (pct >= 60) { grade = "3.0"; gClass = "grade-pass"; }
+      else if (pct >= 50) { grade = "4.0"; gClass = "grade-pass"; }
+
+      document.getElementById("score-pts").innerText = `${earned}/${total}`;
+      document.getElementById("score-pct").innerText = `${pct}%`;
+      const gEl = document.getElementById("grade-display");
+      gEl.innerText = grade;
+      gEl.className = `grade-badge ${gClass}`;
+
+      let repHtml = "";
+      for (const [k, v] of Object.entries(catScores)) {
+        const cPct = Math.round((v.e / v.t) * 100);
+        repHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+          <span>${k}:</span><strong>${v.e}/${v.t} P (${cPct}%)</strong>
+        </div>`;
+      }
+      document.getElementById("category-report").innerHTML = repHtml;
+
+      const panel = document.getElementById("results-panel");
+      panel.classList.add("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function persist() {
+      try { localStorage.setItem("exam_platform_state_ios", JSON.stringify(userAnswers)); } catch(e){}
+    }
+    function loadAnswers() {
+      try {
+        const s = localStorage.getItem("exam_platform_state_ios");
+        if (s) userAnswers = JSON.parse(s);
+      } catch(e){}
+    }
+    function resetAll() {
+      if (confirm("Antworten zurücksetzen?")) {
+        userAnswers = {};
+        localStorage.removeItem("exam_platform_state_ios");
+        document.getElementById("results-panel").classList.remove("visible");
+        render();
+        updateStatus();
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
